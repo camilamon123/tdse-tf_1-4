@@ -77,7 +77,7 @@ El sistema se estructura en los siguientes módulos principales, como se muestra
 | Buzzer | Para emitir una notificación sonora al decodificar una letra o al producirse un error. |
 | Módulo HM-10 | Para la comunicación inalámbrica con una aplicación de terminal serie. |
 | Memoria E2PROM I²C (o Flash interna) | Para almacenar el umbral de luz definido durante la calibración de forma persistente. |
-|Resistores de polarización|Actúan como divisores de tensión para acondicionar señales de datos y también protegen a algunos componentes frente a sobretensiones|
+|Resistores|Actúan como divisores de tensión para acondicionar señales de datos y también protegen a algunos componentes frente a sobretensiones|
 |Tiras de Pines (Headers)|Permiten la conexión entre la placa de desarollo stm32 con la placa experimental|
 | Sensor Analógico | Un LDR (Light-Dependent Resistor) será el sensor principal para medir la intensidad de la luz. |
 |Placa de desarrolo STM32| Modulo principal del proyecto|
