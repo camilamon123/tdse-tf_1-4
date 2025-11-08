@@ -8,7 +8,7 @@
 | :--- | :--- |
 | Monforte, Camila Sol | 107193 |
 | [Apellido, Nombre Integrante 2] | [Padrón Integrante 2] |
-| [Apellido, Nombre Integrante 3] | [Padrón Integrante 3] |
+| Morhell, Haidar Ali | 108576 |
 
 **Fecha: 2do cuatrimestre 2025**
 
