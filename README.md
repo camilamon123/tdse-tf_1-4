@@ -77,9 +77,16 @@ El sistema se estructura en los siguientes módulos principales, como se muestra
 | Buzzer | Para emitir una notificación sonora al decodificar una letra o al producirse un error. |
 | Módulo HM-10 | Para la comunicación inalámbrica con una aplicación de terminal serie. |
 | Memoria E2PROM I²C (o Flash interna) | Para almacenar el umbral de luz definido durante la calibración de forma persistente. |
+|Componentes pasivos|Resistores de polarización y capacitores|
+|Tiras de Pines (Headers)|texto|
 | Sensor Analógico | Un LDR (Light-Dependent Resistor) será el sensor principal para medir la intensidad de la luz. |
+|Placa de desarrolo STM32|texto|
+|Placa experimental perforada|texto|
+|Alambre para Prototipado|texto|
+
 | (Opcional para opinar si les parece bien) Pantalla OLED I²C | Visualización local de símbolo/letra/estado. |
 | Nota de alimentación | Regulador 5→3.3 V con capacitores según el datasheet (por ejemplo LM1117-3.3: 10 µF entrada + 10 µF salida + 100 nF; 7805: 0.33 µF entrada + 0.1 µF salida + bulk 10 µF). |
+||
 
 ##### **4.3 Requisitos de Software y Arquitectura**
 
