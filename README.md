@@ -78,11 +78,11 @@ El sistema se estructura en los siguientes módulos principales, como se muestra
 | Módulo HM-10 | Para la comunicación inalámbrica con una aplicación de terminal serie. |
 | Memoria E2PROM I²C (o Flash interna) | Para almacenar el umbral de luz definido durante la calibración de forma persistente. |
 |Componentes pasivos|Resistores de polarización y capacitores|
-|Tiras de Pines (Headers)|texto|
+|Tiras de Pines (Headers)|Permiten la conexión entre la placa de desarollo stm32 con la placa experimental|
 | Sensor Analógico | Un LDR (Light-Dependent Resistor) será el sensor principal para medir la intensidad de la luz. |
-|Placa de desarrolo STM32|texto|
-|Placa experimental perforada|texto|
-|Alambre para Prototipado|texto|
+|Placa de desarrolo STM32| Modulo principal del proyecto|
+|Placa experimental perforada|Actúa como shield de la placa de desarrollo, en la cual se integran los sensores y algunos de los actuadores.|
+|Alambre para Prototipado|Alambre de tipo Wire-Wrap (AWG 30) o alambre telefónico. Ideal para hacer las conexiones por debajo de la placa experimental.|
 
 | (Opcional para opinar si les parece bien) Pantalla OLED I²C | Visualización local de símbolo/letra/estado. |
 | Nota de alimentación | Regulador 5→3.3 V con capacitores según el datasheet (por ejemplo LM1117-3.3: 10 µF entrada + 10 µF salida + 100 nF; 7805: 0.33 µF entrada + 0.1 µF salida + bulk 10 µF). |
