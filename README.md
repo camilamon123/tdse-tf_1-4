@@ -44,7 +44,7 @@ Los desafíos principales de este proyecto son:
 
 El sistema se estructura en los siguientes módulos principales, como se muestra en el diagrama de bloques.
 
-<p align="center"> <img src="https://i.imgur.com/eB39r3y.png" alt="Diagrama en Bloques del Decodificador Morse"> </p> 
+<p align="center"> <img src="Diagrama de Bloques.png"> </p> 
 <p align="center"><em>Figura 1: Diagrama en bloques del sistema</em></p>
 
 1. **Módulo de Sensado**: Compuesto por un LDR en un divisor de tensión. Convierte la intensidad lumínica en una señal de tensión analógica.
