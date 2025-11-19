@@ -141,7 +141,7 @@ Para cumplir con los requisitos de análisis del curso, se llevarán a cabo las 
 - ⬇️ Descargar fuente (Excel): [Diagrama_de_Gantt_TDSE.xlsx](Diagrama_de_Gantt_TDSE.xlsx)
 
 ---
-
+_Entrega de propuesta vía PR — última actualización: 2025-11-19_
 
 
 
