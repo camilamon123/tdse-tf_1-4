@@ -42,7 +42,7 @@ Los desafíos principales de este proyecto son:
 
 #### **3.1 Arquitectura y Diseño del Sistema**
 
-El sistema se estructura en los siguientes módulos principales, como se muestra en el diagrama de bloques.
+El sistema se estructura en los siguientes módulos principales, como podemos ver en el siguiente diagrama de bloques.
 
 <p align="center"> <img src="Diagrama de Bloques.png" width="400" > </p> 
 <p align="center"><em>Figura 1: Diagrama en bloques del sistema</em></p>
