@@ -137,9 +137,9 @@ Para cumplir con los requisitos de análisis del curso, se llevarán a cabo las 
 
 ### 7. Cronograma (Gantt)
 
-![Diagrama de Gantt](docs/Diagrama_de_Gantt_TDSE.pdf)
+![Diagrama de Gantt](Diagrama_de_Gantt_TDSE.pdf)
 
-Descarga del archivo fuente: [Diagrama_de_Gantt_TDSE.xlsx](docs/Diagrama_de_Gantt_TDSE.xlsx)
+Descarga del archivo fuente: [Diagrama_de_Gantt_TDSE.xlsx](Diagrama_de_Gantt_TDSE.xlsx)
 
 ---
 
