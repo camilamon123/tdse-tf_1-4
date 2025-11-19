@@ -137,8 +137,8 @@ Para cumplir con los requisitos de análisis del curso, se llevarán a cabo las 
 
 ### 7. Cronograma (Gantt)
 
-- 📄 Ver Gantt en PDF: [Diagrama_de_Gantt_TDSE.pdf](docs/Diagrama_de_Gantt_TDSE.pdf)
-- ⬇️ Descargar fuente (Excel): [Diagrama_de_Gantt_TDSE.xlsx](docs/Diagrama_de_Gantt_TDSE.xlsx)
+- 📄 Ver Gantt en PDF: [Diagrama_de_Gantt_TDSE.pdf](Diagrama_de_Gantt_TDSE.pdf)
+- ⬇️ Descargar fuente (Excel): [Diagrama_de_Gantt_TDSE.xlsx](Diagrama_de_Gantt_TDSE.xlsx)
 
 ---
 
