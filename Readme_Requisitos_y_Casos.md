@@ -135,6 +135,12 @@ Para cumplir con los requisitos de análisis del curso, se llevarán a cabo las 
 * **Análisis de Tiempos de Ejecución (WCET)**: Se utilizará un pin de GPIO y un osciloscopio para medir el tiempo de ejecución de las rutinas críticas, como la interrupción del Systick y las funciones dentro del bucle principal, para asegurar que el sistema cumple con las restricciones de tiempo real.
 * **Cálculo del Factor de Uso de la CPU (U)**: Con los valores de WCET ($C_i$) y los períodos de activación ($T_i$) de las tareas principales, se calculará el factor de uso para verificar que el sistema no está sobrecargado.
 
+### 7. Cronograma (Gantt)
+
+![Diagrama de Gantt](docs/Diagrama_de_Gantt_TDSE.pdf)
+
+Descarga del archivo fuente: [Diagrama_de_Gantt_TDSE.xlsx](docs/Diagrama_de_Gantt_TDSE.xlsx)
+
 ---
 
 
