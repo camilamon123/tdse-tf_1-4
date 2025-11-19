@@ -137,8 +137,6 @@ Para cumplir con los requisitos de análisis del curso, se llevarán a cabo las 
 
 ---
 
-**Nota de armado y documentación para la entrega final:**  
-Sin **protoboard** ni **cables Dupont**. Conexiones **soldadas** en placa experimental. Incluye **esquema eléctrico** y **fotos** de cableado en el informe final.
 
 
 
