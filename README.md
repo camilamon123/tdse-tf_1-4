@@ -102,17 +102,36 @@ El sistema se estructura en los siguientes módulos principales, como se muestra
 | Modos de Operación | NORMAL / SET_UP (CAL) / FALLA. |
 | Periféricos | I²C (EEPROM y, si aplica, OLED) y UART (HM-10); ADC para el sensor de luz. |
 
-##### **4.4 Temporización y tolerancias (WPM)**
+##### **4.4 Reglas de temporización y criterios de clasificación**
 
-- **Unidad temporal (u):** `u_ms = 1200 / WPM`.  
-- **Clasificación ON:** `dur_ON < 2·u → punto (·)`; `dur_ON ≥ 2·u → raya (–)`.  
-- **Clasificación OFF:**  
-  - `< 1.5·u` → separador interno (entre símbolos de la misma letra)  
-  - `1.5–4.5·u` → **fin de letra**  
-  - `≥ 6.5·u` → **espacio de palabra**  
-- **Anti-glitches:** ignorar ON/OFF **< 20 ms**.  
-- **Histéresis de luz:** dos umbrales `TH_LO < TH_HI` para robustecer `is_on`.  
-- **Falla:** si el nivel permanece saturado alto/bajo **> 3 s**, pasar a **FALLA**.
+**Unidad de tiempo (Tᵤ).**  
+En este proyecto **Tᵤ** es la **duración de un punto** del código Morse. La relación con la velocidad es:
+
+\[
+T_u\,[\text{ms}] = \frac{1200}{\text{WPM}}
+\]
+
+(donde *WPM* es “palabras por minuto”, usando la palabra estándar “PARIS”).  
+Valores por defecto y rango: **18–20 WPM** (≈ 67–60 ms). Configurable **10–25 WPM** (≈ 120–48 ms) vía Bluetooth; el Tᵤ estimado se **guarda en Flash/EEPROM**. También ofrecemos **auto-calibración**: se capturan unos puntos/rayas de prueba, se estima Tᵤ y se actualizan umbrales.
+
+**Clasificación de pulsos (ON):**
+- **Punto (·):** `dur_ON < 2·Tᵤ`  
+- **Raya (–):** `dur_ON ≥ 2·Tᵤ`
+
+**Clasificación de pausas (OFF):**
+- **Separador interno (entre símbolos de una letra):** `dur_OFF < 1.5·Tᵤ`  
+- **Fin de letra:** `1.5·Tᵤ ≤ dur_OFF < 4.5·Tᵤ`  
+- **Espacio de palabra:** `dur_OFF ≥ 6.5·Tᵤ`
+
+**Por qué esos márgenes.**  
+Los valores teóricos (1·Tᵤ, 3·Tᵤ, 7·Tᵤ) se separan con **coeficientes 1.5 / 2 / 4.5 / 6.5** para tener **tolerancia** a jitter, tiempo de reacción humano y respuesta del sensor (LDR/OLED), evitando clasificar de manera ajustada.
+
+**Realismo y usos.**  
+Trabajar en **milisegundos** es lo natural para señales ópticas manuales (linterna/flash de celular, LED) y para un LDR, y cuadra con nuestro **tick de 1 ms**.  
+- **Útil/realista:** ~**15–25 WPM** (Tᵤ ≈ 80–48 ms) → demostraciones, balizas simples, “SOS” con linterna, comunicación corta indoor/outdoor.  
+- **Demasiado lento:** **<10 WPM** (Tᵤ > 120 ms) → mensajes largos se vuelven tediosos (igual decodifica).  
+- **Demasiado rápido (manual):** **>25–30 WPM** (Tᵤ < 48–40 ms) exige mucha precisión humana y al LDR; con fuentes automáticas podría subirse ajustando filtros/umbrales.
+
 
 #### **5. Casos de Uso Principales**
 
