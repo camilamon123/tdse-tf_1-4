@@ -69,49 +69,50 @@ El sistema se estructura en los siguientes módulos principales, como se muestra
 
 ##### **4.2 Requisitos de Hardware**
 
-| Componente | Uso en el Proyecto |
-| :--- | :--- |
-| Dip Switchs | Para cambiar entre el modo NORMAL (operación) y un modo DEBUG que envíe mediciones de tiempo en crudo por Bluetooth. |
-| Buttons | Para iniciar el modo de calibración (SET_UP) y confirmar los pasos de la misma. |
-| Leds | Un LED para indicar el estado de la señal (luz detectada) y otro para indicar un evento (ej. letra decodificada). |
-| Buzzer | Para emitir una notificación sonora al decodificar una letra o al producirse un error. |
-| Módulo HM-10 | Para la comunicación inalámbrica con una aplicación de terminal serie. |
-| Memoria E2PROM I²C (o Flash interna) | Para almacenar el umbral de luz definido durante la calibración de forma persistente. |
-|Resistores|Actúan como divisores de tensión para acondicionar señales de datos y también protegen a algunos componentes frente a sobretensiones|
-|Tiras de Pines (Headers)|Permiten la conexión entre la placa de desarollo stm32 con la placa experimental|
-| Sensor Analógico | Un LDR (Light-Dependent Resistor) será el sensor principal para medir la intensidad de la luz. |
-|Placa de desarrolo STM32| Modulo principal del proyecto|
-|Placa experimental perforada|Actúa como shield de la placa de desarrollo, se integran los sensores y algunos de los actuadores.|
-|Alambre para Prototipado|Alambre de tipo Wire-Wrap (AWG 30) o alambre telefónico. Ideal para hacer las conexiones por debajo de la placa experimental.|
+| ID| Componente |Uso en el Proyecto |
+| :--- | :--- |:--- |
+|RH-01| Dip Switchs  |Para cambiar entre el modo NORMAL (operación) y un modo DEBUG que envíe mediciones de tiempo en crudo por Bluetooth. |
+|RH-02| Buttons  | Para iniciar el modo de calibración (SET_UP) y confirmar los pasos de la misma. |
+|RH-03| Leds  | Un LED para indicar el estado de la señal (luz detectada) y otro para indicar un evento (ej. letra decodificada). |
+| RH-04| Buzzer  |Para emitir una notificación sonora al decodificar una letra o al producirse un error. |
+| RH-05| Módulo HM-10  |Para la comunicación inalámbrica con una aplicación de terminal serie. |
+| RH-06| Memoria E2PROM I²C (o Flash interna)  |Para almacenar el umbral de luz definido durante la calibración de forma persistente. |
+|RH-07|Resistores |Actúan como divisores de tensión para acondicionar señales de datos y también protegen a algunos componentes frente a sobretensiones|
+|RH-08|Tiras de Pines (Headers) |Permiten la conexión entre la placa de desarollo stm32 con la placa experimental|
+|RH-09| Sensor Analógico  | Un LDR (Light-Dependent Resistor) será el sensor principal para medir la intensidad de la luz. |
+|RH-10|Placa de desarrolo STM32 | Modulo principal del proyecto|
+|RH-11|Placa experimental perforada |Actúa como shield de la placa de desarrollo, se integran los sensores y algunos de los actuadores.|
+|RH-12|Alambre para Prototipado |Alambre de tipo Wire-Wrap (AWG 30) o alambre telefónico. Ideal para hacer las conexiones por debajo de la placa experimental.|
 
-| (Opcional para opinar si les parece bien) Pantalla OLED I²C | Visualización local de símbolo/letra/estado. |
-| Nota de alimentación | Regulador 5→3.3 V con capacitores según el datasheet (por ejemplo LM1117-3.3: 10 µF entrada + 10 µF salida + 100 nF; 7805: 0.33 µF entrada + 0.1 µF salida + bulk 10 µF). |
+|Pantalla OLED I²C | Visualización local de símbolo/letra/estado. |
+| Nota de alimentación | Regulador 5→3,3 V con capacitores según el datasheet (por ejemplo LM1117-3,3: 10 µF entrada + 10 µF salida + 100 nF; 7805: 0,33 µF entrada + 0,1 µF salida + bulk 10 µF). |
 ||
 
 ##### **4.3 Requisitos de Software y Arquitectura**
 
-| Requisito | Implementación en el Proyecto |
-| :--- | :--- |
-| Bare Metal | El firmware se desarrollará sin el uso de un sistema operativo. |
-| Event-Triggered | La lógica principal se basará en eventos (flags temporizados y cambios de estado). |
-| Estructura Modular | El código se organizará en módulos (adc_light, morse_decode, ui/buzzer, bt_cmd, storage, app_control). |
-| Super-Loop < 1 ms | El bucle principal estará diseñado para ser no bloqueante, con tareas periódicas de sondeo y gestión de flags. |
-| Tick de 1 ms | Se configurará el Systick para generar una interrupción cada 1 ms, que servirá como base de tiempo para toda la lógica de temporización. |
-| Diagramas de Estado | El decodificador se modelará con una máquina de estados finitos (FSM) que gestionará los estados: IDLE, DETECTING_PULSE, DETECTING_PAUSE. |
-| Menú Interactivo | El modo SET_UP para la calibración funcionará como un menú simple guiado por LEDs y confirmado con un botón. |
-| Modos de Operación | NORMAL / SET_UP (CAL) / FALLA. |
-| Periféricos | I²C (EEPROM y, si aplica, OLED) y UART (HM-10); ADC para el sensor de luz. |
+|ID | Requisito |Implementación en el Proyecto |
+| :--- | :--- |:--- |
+|RS-01| Bare Metal | El firmware se desarrollará sin el uso de un sistema operativo. |
+|RS-02| Event-Triggered | La lógica principal se basará en eventos (flags temporizados y cambios de estado). |
+|RS-03| Estructura Modular | El código se organizará en módulos (adc_light, morse_decode, ui/buzzer, bt_cmd, storage, app_control). |
+|RS-04| Super-Loop < 1 ms | El bucle principal estará diseñado para ser no bloqueante, con tareas periódicas de sondeo y gestión de flags. |
+| RS-05| Tick de 1 ms |Se configurará el Systick para generar una interrupción cada 1 ms, que servirá como base de tiempo para toda la lógica de temporización. |
+|RS-06| Diagramas de Estado | El decodificador se modelará con una máquina de estados finitos (FSM) que gestionará los estados: IDLE, DETECTING_PULSE, DETECTING_PAUSE. |
+|RS-07| Menú Interactivo | El modo SET_UP para la calibración funcionará como un menú simple guiado por LEDs y confirmado con un botón. |
+|RS-08| Modos de Operación | NORMAL / SET_UP (CAL) / FALLA. |
+|RS-09| Periféricos | I²C (EEPROM y, si aplica, OLED) y UART (HM-10); ADC para el sensor de luz. |
 
 ##### **4.4 Reglas de temporización y criterios de clasificación**
 
 **Unidad de tiempo (Tᵤ).**  
 En este proyecto **Tᵤ** es la **duración de un punto** del código Morse. La relación con la velocidad es:
 
-\[
+$$
 T_u\,[\text{ms}] = \frac{1200}{\text{WPM}}
-\]
+$$
 
-(donde *WPM* es “palabras por minuto”, usando la palabra estándar “PARIS”).  
+Donde *WPM* representa ''Palabras por minuto''. El valor constante 1200 surge de utilizar la palabra estándar **''Paris''** como referencia de calibración. Según la norma internacional, la palabra ''Paris'' equivale exactamente 50 unidades de tiempo ($50 \cdot T_u$). Por lo tanto, al dividir los 60.000ms de un minuto por las 50 unidades de la palabra patrón, se obtiene la constante 1200.
+
 Valores por defecto y rango: **18–20 WPM** (≈ 67–60 ms). Configurable **10–25 WPM** (≈ 120–48 ms) vía Bluetooth; el Tᵤ estimado se **guarda en Flash/EEPROM**. También ofrecemos **auto-calibración**: se capturan unos puntos/rayas de prueba, se estima Tᵤ y se actualizan umbrales.
 
 **Clasificación de pulsos (ON):**
