@@ -70,8 +70,7 @@ Este esquema permite visualizar rápidamente qué partes del proyecto están com
 ## **Conclusiones y Próximos Pasos**
 
 - Integrar completamente el módulo HM-10 con la decodificación estable.  
-- Finalizar el modo FALLA y completar los tests de robustez.  
-- Montar y soldar la placa experimental perforada.  
+- Finalizar el modo FALLA y completar los tests de robustez.    
 - Evaluar si se mantiene o descarta el uso de la pantalla OLED.
 
 _Última actualización: 06/02/2026_  
