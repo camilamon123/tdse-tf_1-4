@@ -1,0 +1,8 @@
+../Core/Src/app/morse_decoder.c:40:13:qpush	24	static
+../Core/Src/app/morse_decoder.c:49:16:qpop	16	static
+../Core/Src/app/morse_decoder.c:57:13:decode_symbol	24	static
+../Core/Src/app/morse_decoder.c:67:6:Morse_Init	16	static
+../Core/Src/app/morse_decoder.c:75:10:Morse_GetTu	4	static
+../Core/Src/app/morse_decoder.c:80:6:Morse_OnPulse	16	static
+../Core/Src/app/morse_decoder.c:92:6:Morse_OffGap	24	static
+../Core/Src/app/morse_decoder.c:126:9:Morse_PopChar	16	static

@@ -1,0 +1,4 @@
+../Core/Src/app/oled_ui.c:61:13:draw_line.part.0	16	static
+../Core/Src/app/oled_ui.c:93:6:OledUI_Init	16	static
+../Core/Src/app/oled_ui.c:105:6:OledUI_SetSnapshot	112	static,ignoring_inline_asm
+../Core/Src/app/oled_ui.c:190:6:OledUI_Task	232	static,ignoring_inline_asm

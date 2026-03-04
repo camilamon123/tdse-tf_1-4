@@ -1,0 +1,3 @@
+../Core/Src/app/nv_store.c:52:5:NvStore_Clear	32	static
+../Core/Src/app/nv_store.c:72:5:NvStore_Save	40	static
+../Core/Src/app/nv_store.c:112:5:NvStore_Load	32	static

@@ -1,0 +1,6 @@
+../Core/Src/app/nv_store.c:32:17:nv_crc_xor	24	static
+../Core/Src/app/nv_store.c:39:17:nv_flash_size_bytes	16	static
+../Core/Src/app/nv_store.c:46:17:nv_base_addr	16	static
+../Core/Src/app/nv_store.c:52:5:NvStore_Clear	40	static
+../Core/Src/app/nv_store.c:72:5:NvStore_Save	56	static
+../Core/Src/app/nv_store.c:112:5:NvStore_Load	56	static

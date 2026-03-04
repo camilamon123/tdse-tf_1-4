@@ -1,0 +1,5 @@
+../Core/Src/app/setup_btn.c:28:13:setup_printf	152	static
+../Core/Src/app/setup_btn.c:63:16:btn_clicked	16	static
+../Core/Src/app/setup_btn.c:71:6:SetupBtn_Init	16	static
+../Core/Src/app/setup_btn.c:78:6:SetupBtn_Start	16	static
+../Core/Src/app/setup_btn.c:93:6:SetupBtn_Task	48	static

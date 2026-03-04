@@ -1,0 +1,11 @@
+../Core/Src/app/light_sensor.c:18:6:LightSensor_Init	0	static
+../Core/Src/app/light_sensor.c:29:10:LightSensor_GetThLow	0	static
+../Core/Src/app/light_sensor.c:30:10:LightSensor_GetThHigh	0	static
+../Core/Src/app/light_sensor.c:32:5:LightSensor_SetThresholds	0	static
+../Core/Src/app/light_sensor.c:41:9:LightSensor_GetLevel	0	static
+../Core/Src/app/light_sensor.c:46:9:LightSensor_UpdateLevel	0	static
+../Core/Src/app/light_sensor.c:64:9:LightSensor_ComputePercent	0	static
+../Core/Src/app/light_sensor.c:83:6:LightSensor_SyncLevel	0	static
+../Core/Src/app/light_sensor.c:91:6:LightSensor_CalibStart	0	static
+../Core/Src/app/light_sensor.c:99:5:LightSensor_CalibSetLow	0	static
+../Core/Src/app/light_sensor.c:107:5:LightSensor_CalibSetHigh	0	static

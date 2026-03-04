@@ -1,0 +1,12 @@
+../Core/Src/app/bt_link.c:28:13:bt_tx_raw	16	static
+../Core/Src/app/bt_link.c:36:13:bt_maybe_emit_symbol_before_prompt	56	static
+../Core/Src/app/bt_link.c:57:6:BtLink_Init	16	static
+../Core/Src/app/bt_link.c:68:6:BtLink_SetEnabled	16	static
+../Core/Src/app/bt_link.c:73:9:BtLink_IsEnabled	4	static
+../Core/Src/app/bt_link.c:78:6:BtLink_AttachCliRx	16	static
+../Core/Src/app/bt_link.c:83:9:BtLink_OnUartRxCplt	24	static
+../Core/Src/app/bt_link.c:101:6:BtLink_Task	16	static
+../Core/Src/app/bt_link.c:114:16:is_symbol_update	24	static
+../Core/Src/app/bt_link.c:123:13:cache_symbol_from_update	48	static
+../Core/Src/app/bt_link.c:155:6:BtLink_Write	280	static
+../Core/Src/app/bt_link.c:201:6:BtLink_WriteStr	16	static

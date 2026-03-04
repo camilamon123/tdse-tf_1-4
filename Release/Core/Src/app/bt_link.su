@@ -1,0 +1,10 @@
+../Core/Src/app/bt_link.c:28:13:bt_tx_raw	4	static
+../Core/Src/app/bt_link.c:155:6:BtLink_Write.part.0	272	static
+../Core/Src/app/bt_link.c:57:6:BtLink_Init	0	static
+../Core/Src/app/bt_link.c:68:6:BtLink_SetEnabled	0	static
+../Core/Src/app/bt_link.c:73:9:BtLink_IsEnabled	0	static
+../Core/Src/app/bt_link.c:78:6:BtLink_AttachCliRx	0	static
+../Core/Src/app/bt_link.c:83:9:BtLink_OnUartRxCplt	16	static
+../Core/Src/app/bt_link.c:101:6:BtLink_Task	24	static
+../Core/Src/app/bt_link.c:155:6:BtLink_Write	32	static
+../Core/Src/app/bt_link.c:201:6:BtLink_WriteStr	8	static

@@ -1,0 +1,4 @@
+../Core/Src/drivers/ldr.c:19:6:LDR_Init	1
+../Core/Src/drivers/ldr.c:27:10:LDR_ReadRaw	3
+../Core/Src/drivers/ldr.c:45:10:LDR_ReadFiltered	2
+../Core/Src/drivers/ldr.c:71:10:LDR_GetLastRaw	1

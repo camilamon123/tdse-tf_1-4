@@ -1,0 +1,2 @@
+../Core/Src/app/button_input.c:25:6:ButtonInput_Init	1
+../Core/Src/app/button_input.c:36:9:ButtonInput_GetStable	3

@@ -1,0 +1,7 @@
+../Core/Src/app/morse_decoder.c:40:13:qpush	2
+../Core/Src/app/morse_decoder.c:57:13:decode_symbol.constprop	3
+../Core/Src/app/morse_decoder.c:67:6:Morse_Init	1
+../Core/Src/app/morse_decoder.c:75:10:Morse_GetTu	1
+../Core/Src/app/morse_decoder.c:80:6:Morse_OnPulse	2
+../Core/Src/app/morse_decoder.c:92:6:Morse_OffGap	6
+../Core/Src/app/morse_decoder.c:126:9:Morse_PopChar	2

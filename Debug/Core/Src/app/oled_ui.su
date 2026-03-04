@@ -1,0 +1,8 @@
+../Core/Inc/drivers/ssd1306.h:96:20:SSD1306_DrawString5x7At	24	static
+../Core/Src/app/oled_ui.c:47:20:mode_str	16	static
+../Core/Src/app/oled_ui.c:61:13:draw_line	16	static
+../Core/Src/app/oled_ui.c:68:13:draw_wrapped_phrase_2lines	72	static
+../Core/Src/app/oled_ui.c:93:6:OledUI_Init	16	static
+../Core/Src/app/oled_ui.c:105:6:OledUI_SetSnapshot	112	static,ignoring_inline_asm
+../Core/Src/app/oled_ui.c:136:13:oled_draw	88	static
+../Core/Src/app/oled_ui.c:190:6:OledUI_Task	136	static,ignoring_inline_asm
