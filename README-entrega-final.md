@@ -187,7 +187,7 @@ En este capítulo se detalla el proceso de desarrollo del sistema Luz-Morse, aba
 
 El diseño del hardware se centró en la simplicidad y la modularidad, utilizando una plataforma de desarrollo estándar complementada con periféricos específicos para la entrada y salida de señales. Como se ilustra en la Figura 3.1, la arquitectura general del sistema se basa en la placa de desarrollo NUCLEO-F103RB, equipada con un microcontrolador STM32F103RBT6 (ARM Cortex-M3) que actúa como núcleo de procesamiento. A este cerebro se enlazan directamente el módulo del sensado óptico, las interfaces locales de usuario y el puente de comunicación inalámbrica.
 
-<img src="docs/img/Figura3_1.png" width="700" />
+<img src="docs/img/Figura3_1.png?v=2" width="700" />
 <em>Figura 3.1 — Arquitectura funcional a nivel de bloques.</em><br><br>
 
 ### 3.1.1 Módulo de sensado y acondicionamiento
