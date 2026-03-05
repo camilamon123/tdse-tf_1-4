@@ -341,7 +341,9 @@ En la Figura 4.2 se puede apreciar el correcto funcionamiento del módulo, mostr
 
 ### 4.2.1 Validación del Filtro Digital
 
-Se compararon señales raw y filtradas (EMA en `ldr.c`). Se observó que el filtro suaviza picos transitorios evitando falsos disparos sin introducir retardo significativo.
+Para evaluar la robustez ante el ruido eléctrico y lumínico, se compararon las señales "Cruda" (Raw) y "Filtrada" (Filtered) procesadas por el algoritmo de media móvil exponencial (EMA) implementado en `ldr.c`.
+
+Se observó que el filtro suaviza eficazmente los picos transitorios provocados por variaciones rápidas de la luz ambiente, evitando falsos disparos en la máquina de estados, sin introducir un retardo significativo que afecte la decodificación de pulsos rápidos.
 
 ### 4.2.2 Verificación de la Calibración Dinámica
 
@@ -352,6 +354,10 @@ Se sometió al dispositivo a una prueba de calibración en dos entornos distinto
 3. Tras reiniciar el equipo, se verificó mediante UART que los valores de umbral (VTH) almacenados en la memoria Flash coincidieran con los calculados, validando la persistencia de datos del módulo `nv_store` y su correcta visualización sobre la pantalla OLED.  
 
 La Figura 4.3 expone la captura de la terminal serie vinculada por Bluetooth, donde se corrobora la respuesta exitosa al comando de estado (`status`) con los parámetros operativos actualizados tras la calibración.
+
+<img src="docs/img/Figura4_3.png" width="700" />
+<em>Figura 4.3 — Estado actual del sistema observada desde una terminal Bluetooth.</em><br><br>
+
 ## 4.3 Pruebas de integración
 
 Se realizó una prueba de extremo a extremo ("End-to-End") transmitiendo mensajes conocidos en código Morse ("SOS" y "HOLA") utilizando una linterna LED manual a distintas distancias.
@@ -370,6 +376,8 @@ El ensamble físico utilizado para llevar a cabo estas pruebas de integración y
 *(archivo original: `VN20260228_222425.mp4`)*
 
 ## 4.4 Análisis de desempeño
+
+Dado que se trata de un sistema de tiempo real, se analizaron los tiempos de ejecución y el consumo de recursos energéticos del prototipo para garantizar su eficiencia.
 
 #### 4.4.1 Tiempos de ejecución y uso de CPU
 
