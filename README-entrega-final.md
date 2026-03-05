@@ -461,6 +461,13 @@ Se hace uso de `HAL_PWR_EnterSLEEPMode` y `HAL_PWR_EnterSTOPMode` para optimizar
 
 # Conclusiones
 
+El desarrollo del prototipo **Luz-Morse** cumplió satisfactoriamente con los objetivos planteados, logrando la implementación de un sistema embebido funcional, eficiente y de bajo costo, capaz de decodificar señales ópticas en tiempo real. Los principales logros del proyecto se resumen a continuación:
+
+- **Eficacia:** Se logró una tasa de acierto increíblemente alta en la decodificación bajo condiciones controladas a 1 metro de distancia. Esto demuestra la efectividad del filtro digital de media móvil y del algoritmo de calibración dinámica, los cuales lograron mitigar exitosamente el ruido inherente al sensor LDR.
+- **Alta eficiencia computacional:** La arquitectura de software *bare-metal* orientada a eventos demostró un rendimiento óptimo. Con un tiempo de ejecución en el peor de los casos (WCET) de tan solo **43 us** y un uso de CPU del **4.3%**, el sistema garantiza el determinismo temporal necesario para procesar el código Morse sin pérdida de datos.
+- **Bajo consumo energético:** El sistema integrado registró un consumo máximo inferior a **50 mA** en plena operación, lo que lo hace viable para su uso como dispositivo portátil alimentado a baterías.
+- **Experiencia de usuario completa:** La incorporación de una memoria no volátil emulada para la persistencia de los umbrales de calibración, combinada con el feedback local y remoto, resultó en un dispositivo autónomo y de fácil operación.
+
 ## 7.1 Resultados obtenidos
 
 El prototipo Luz-Morse cumplió los objetivos, logrando un sistema embebido funcional, eficiente y de bajo costo. Principales logros:
