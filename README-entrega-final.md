@@ -112,33 +112,36 @@ Finalmente, se seleccionó el Decodificador Óptico (Luz-Morse). Esta alternativ
 
 ## 2.1 Requisitos
 
-En esta sección se presentan los requisitos identificados para el desarrollo del sistema. Dichos requisitos se clasifican en diferentes grupos según su naturaleza y función dentro del proyecto. A continuación se detallan los requisitos funcionales, de hardware y de software/arquitectura con sus respectivas descripciones.
+En esta sección se presentan los requisitos identificados para el desarrollo del sistema. Dichos requisitos se clasifican en diferentes grupos según su naturaleza y función dentro del proyecto. A continuación, en la Tabla 2.1, se detallan los requisitos funcionales, requisitos de hardware y requisitos de software con sus respectivas descripciones.
 
 | Grupo | ID | Descripción |
 | --- | --- | --- |
-| Funcionales | 1.1 | El sistema debe ser capaz de medir la duración de los pulsos de luz (estados "ON") y las pausas (estados "OFF"). |
+| 1. Funcionales | 1.1 | El sistema debe ser capaz de medir la duración de los pulsos de luz (estados "ON") y las pausas (estados "OFF"). |
 |  | 1.2 | Debe clasificar los pulsos como “punto” o “raya” y las pausas como inter-símbolo, inter-letra o inter-palabra según los estándares del código Morse. |
 |  | 1.3 | Debe traducir las secuencias de puntos y rayas válidas a su correspondiente carácter alfanumérico. |
 |  | 1.4 | Los caracteres decodificados deben ser transmitidos vía Bluetooth a un dispositivo externo. |
 |  | 1.5 | Debe existir un modo (SET_UP) que permita al usuario calibrar el umbral de detección de luz para adaptarse a diferentes condiciones ambientales. |
-|  | 1.6 | El valor del umbral de calibración debe guardarse en memoria no volátil (E2PROM/Flash) para que persista entre reinicios. |
+|  | 1.6 | El valor del umbral de calibración debe guardarse en memoria no volátil (Flash) para que persista entre reinicios. |
 |  | 1.7 | El sistema debe proveer feedback visual (LEDs) y auditivo (Buzzer) sobre el estado de la decodificación. |
-| Hardware | 2.1 | Buttons : Para iniciar el modo de calibración (SET_UP) y confirmar los pasos de la misma. |
-|  | 2.2 | Leds : Un led para indicar el estado de la señal (luz detectada) y otro para indicar un evento (ej. letra decodificada). |
-|  | 2.3 | Buzzer : Para emitir una notificación sonora al decodificar una letra o al producirse un error. |
-|  | 2.4 | Módulo HC-05 (SPP)  : Para la comunicación inalámbrica con una aplicación de terminal serie. |
-|  | 2.5 | Flash interna : Para almacenar el umbral de luz definido durante la calibración de forma persistente. |
-|  | 2.6 | Resistores: Actúan como divisores de tensión para acondicionar señales de datos y también protegen a algunos componentes frente a sobretensiones . |
-|  | 2.7 | Pantalla OLED SPI : Visualización local de símbolo/letra/estado. |
+| 2. Hardware | 2.1 | Buttons: Para iniciar el modo de calibración (SET_UP) y confirmar los pasos de la misma. |
+|  | 2.2 | Leds: Un led para indicar el estado de la señal (luz detectada) y otro para indicar un evento (ej. letra decodificada). |
+|  | 2.3 | Buzzer: Para emitir una notificación sonora al decodificar una letra o al producirse un error. |
+|  | 2.4 | Módulo HC-05 (SPP): Para la comunicación inalámbrica con una aplicación de terminal serie. |
+|  | 2.5 | Flash interna: Para almacenar el umbral de luz definido durante la calibración de forma persistente. |
+|  | 2.6 | Resistores: Actúan como divisores de tensión para acondicionar señales de datos y también protegen a algunos componentes frente a sobretensiones. |
+|  | 2.7 | Pantalla OLED SPI: Visualización local de símbolo/letra/estado. |
 |  | 2.8 | Sensor analógico: Un LDR (Light-Dependent Resistor, Resistencia dependiente de la luz) será el sensor principal para medir la intensidad de la luz. |
-| Software y arquitectura | 3.1 | Bare Metal : El firmware se desarrollará sin el uso de un sistema operativo. |
-|  | 3.2 | Event- Triggered : La lógica principal se basará en eventos (flags temporizados y cambios de estado). |
-|  | 3.3 | Estructura modular  :  El código se organizará en módulos (adc_light, morse_decode, ui/buzzer, bt_cmd, storage, app_control). |
-|  | 3.4 | Super-Loop < 1 ms : El bucle principal estará diseñado para ser no bloqueante, con tareas periódicas de sondeo y gestión de flags. |
+| 3. Software y arquitectura | 3.1 | Bare Metal: El firmware se desarrollará sin el uso de un sistema operativo. |
+|  | 3.2 | Event-Triggered: La lógica principal se basará en eventos (flags temporizados y cambios de estado). |
+|  | 3.3 | Estructura modular: El firmware se divide en módulos independientes: `app` (superloop y modos), entradas `button_input` (anti-rebote) y `ldr/light_sensor` (ADC, filtrado, nivel/umbrales), `morse_decoder` (ON/OFF→símbolos→caracteres según Tu), UI `led_ui`/`buzzer` (feedback no bloqueante) y `oled_ui` (estado en pantalla), comunicación `cli` + `bt_link` (comandos espejo), y persistencia `nv_store` (config en Flash) con calibración en `setup_btn`. |
+|  | 3.4 | Super-Loop < 1 ms: El bucle principal estará diseñado para ser no bloqueante, con tareas periódicas de sondeo y gestión de flags. |
 |  | 3.5 | Se configurará el Systick para generar una interrupción cada 1 ms, que servirá como base de tiempo para toda la lógica de temporización. |
 |  | 3.6 | El decodificador se modelará con una FSM (Finite State Machine, Máquina de estados finitos) que gestionará los estados: IDLE, DETECTING_PULSE, DETECTING_PAUSE. |
 |  | 3.7 | El modo SET_UP para la calibración funcionará como un menú guiado por mensajes en pantalla OLED y confirmado con un botón, utilizando los LEDs como feedback visual complementario. |
-|  | 3.8 | Periféricos: SPI (EEPROM y OLED) y UART (HC-05); ADC para el sensor de luz. |
+|  | 3.8 | Periféricos: SPI (OLED SSD1306) y UART (HC-05); ADC para el sensor de luz. |
+|  | 3.9 | Flash interna (persistencia de thresholds y Tu). |
+
+<em>Tabla 2.1 — Requisitos del proyecto.</em><br><br>
 
 ## 2.2 Casos de uso
 
@@ -204,19 +207,30 @@ Para la transmisión de los datos decodificados, se integró un módulo Bluetoot
 
 ### 3.1.3 Asignación de recursos del microcontrolador
 
-Para garantizar un control preciso y determinista de los periféricos, se realizó una asignación específica de los pines y recursos internos del STM32F103RB. La distribución física de estas conexiones sobre la placa de desarrollo se ilustra en la Figura 3.3.
+Para garantizar un control preciso y determinista de los periféricos, se realizó una asignación específica de los pines y recursos internos del STM32F103RB. La distribución física de estas conexiones sobre la placa de desarrollo se ilustra en el diagrama de la Figura 3.3, el cual facilita la comprensión del montaje y la replicabilidad del prototipo.
 
 <img src="docs/img/Figura3_3.png" width="700" />
 <em>Figura 3.3 — Diagrama de conexiones y asignación de pines en la placa NUCLEO-F103RB.</em><br><br>
 
-#### Tabla 3.1 — Mapa de conexiones y recursos del MCU
+A continuación, la Tabla 3.1 detalla la función lógica específica asignada a cada recurso de hardware listado en el esquema anterior.
 
-| Recurso | Pin | Función | Descripción |
+| Recurso / Señal | Pin MCU | Pin Arduino (NUCLEO) | Función / Descripción |
 | --- | --- | --- | --- |
-| SPI1 | PA5 (SCK)/ PA7 (MOSI) | Comunicación SPI | Bus de datos de alta velocidad para la pantalla OLED. |
-| USART1 | PA9 (TX)/PA10 (RX) | Comunicación UART | Interfaz con módulo Bluetooth HC-05 (9600 bps). |
-| GPIO | PB6 (D10)/ PC7(D9)/ PA6 (D12) | Salidas digitales | Señales de control para el OLED |
-|  | PA8 | Salida digital | Indicador LED para feedback visual de decodificación. |
+| ADC1_IN0 (LDR) | PA0 | A0 | Lectura analógica del divisor con LDR (intensidad de luz). |
+| USART2 (PuTTY) | PA2 (TX) / PA3 (RX) | ST-Link VCP | Consola por USB (115200 bps) para CLI y debug. |
+| USART1 (HC-05) | PA9 (TX) / PA10 (RX) | D8 / D2 | Comunicación Bluetooth SPP (9600 bps) hacia celular. |
+| BT_STATE (HC-05) | PB5 | D4 | Entrada digital (pull-down): detecta link BT. Habilita TX por BT y dispara banner al conectar. |
+| SPI1 (OLED SSD1306) | PA5 (SCK) / PA7 (MOSI) | D13 / D11 | Bus SPI hacia OLED (MISO no se usa). |
+| OLED_CS | PB6 | D10 | Chip Select (activo en bajo). |
+| OLED_DC | PC7 | D9 | Data/Command (0=cmd, 1=data). |
+| OLED_RES | PA6 | D12 | Reset del OLED (activo en bajo). |
+| LED externo (feedback) | PA8 | D7 | Indicador visual de eventos (letra/espacio/error). |
+| Buzzer (feedback) | PB10 | D6 | Beep corto al detectar letra/error (no bloqueante). |
+| USER button | PC13 | B1 USER | Entrada digital: modo morse por botón y pasos de setup. |
+
+**Alimentación:** todo el sistema opera a **3.3 V** (menos el **HC-05, 5V**) y **GND común**.
+
+<em>Tabla 3.1 — Mapa de conexiones y recursos del MCU.</em><br><br>
 
 ## 3.2 Firmware del  sistema
 
@@ -258,20 +272,23 @@ Se implementó una CLI que recibe instrucciones a través del puerto serie. Medi
 - `mode light`: operación normal decodificando la señal del LDR.
 - `mode ldr`: modo diagnóstico que imprime porcentaje de iluminación y niveles brutos del ADC en formato de barras.
 
-### 3.2.4 Algoritmo de Calibración Dinámica
+### 3.2.4 Algoritmo de Calibración Dinámica (modo setup)
 
-El procedimiento, gestionado por `setup_btn.c`, consta de dos etapas guiadas paso a paso mediante mensajes en OLED y terminal serie (Bluetooth), requiriendo confirmación del usuario con el pulsador. Se utiliza el LED externo como feedback visual complementario.
+El sistema implementa un procedimiento de calibración interactiva para obtener dos umbrales:
 
-1. **Muestreo de nivel bajo (VL):** el usuario cubre el sensor y el sistema promedia múltiples lecturas del ADC para establecer el nivel base de oscuridad.
-2. **Muestreo de nivel alto (VH):** se ilumina el sensor y se obtiene el promedio de intensidad máxima.
+- `th_low`: nivel de referencia asociado a “intensidad de luz un poco por encima de la luz ambiente”.
+- `th_high`: nivel asociado a “luz de intensidad intermedia” (linterna parcialmente cerca del LDR).
 
-El umbral operativo se calcula como:
+La calibración se ejecuta en el modo `mode setup` y se guía por mensajes en UART y Bluetooth.
 
-```text
-VTH = (VL + VH) / 2
-```
+El usuario realiza dos mediciones presionando el botón USER (`PC13`) cuando el sistema lo solicita:
 
-Adicionalmente, se establecen márgenes de histéresis (superior e inferior) alrededor del umbral para evitar oscilaciones indeseadas.
+- **Paso 1 (LOW):** con el LDR iluminado parcialmente (un poco por encima de lo que la luz ambiente ya ilumina), se captura el valor filtrado y se guarda como `th_low`.
+- **Paso 2 (HIGH):** iluminando el LDR con una linterna de forma clara (un poco más cerca de lo que ya se iluminó en el anterior paso), se captura el valor filtrado y se guarda como `th_high`.
+
+Estos umbrales se utilizan luego en el algoritmo de decisión con histéresis: el nivel lógico cambia a “1” solo si el valor supera `th_high`, y vuelve a “0” únicamente cuando cae por debajo de `th_low`. Esto evita oscilaciones y falsos flancos debido a ruido o variaciones pequeñas de luz ambiente.
+
+Finalmente, la configuración (`Tu`, `th_low`, `th_high`) puede persistirse en memoria Flash para conservarse entre reinicios.
 
 ## 3.2.5 Persistencia de Datos
 
@@ -296,7 +313,14 @@ Se evaluó el comportamiento del divisor de tensión conformado por el LDR y el 
 
 ### 4.1.2 Interfaz de visualización (OLED)
 
-Se validó la comunicación SPI con la pantalla OLED SSD1306. Se observó refresco fluido y actualización parcial sin artefactos visuales. La Figura 4.2 muestra el módulo en operación.
+Se validó la comunicación con la pantalla OLED basada en SSD1306 utilizando SPI1 y señales de control CS/DC/RES. La pantalla se inicializa al arranque y se actualiza de forma periódica desde una tarea no bloqueante (superloop), mostrando información relevante del sistema:
+
+- modo actual (`none/morse/light/ldr/setup`)
+- umbrales `th_low` y `th_high`
+- porcentaje estimado del LDR y barra de nivel
+- símbolo morse en construcción y última frase decodificada
+
+La estrategia de actualización se diseñó para no interferir con la decodificación: la UI se refresca a una tasa baja (apta para visualización humana), y el procesamiento crítico (captura de flancos y clasificación punto/raya) se mantiene separado del renderizado de la pantalla.
 
 <img src="docs/img/Figura4_2.png" width="700" />
 <em>Figura 4.2 — Estado del sistema proyectado sobre el módulo OLED.</em><br><br>
@@ -332,31 +356,49 @@ La Figura 4.4 muestra el montaje utilizado para estas pruebas.
 
 ## 4.4 Análisis de desempeño
 
-### 4.4.1 Tiempos de ejecución y uso de CPU
+#### 4.4.1 Tiempos de ejecución y uso de CPU
 
-- **Período base (tick):** 1.0 ms  
-- **WCET:** `App_Task_LightMorse` = 43 µs (máximo medido). `SetupBtn_Task` promedió 38 µs.
+Para verificar que el sistema cumple con las restricciones temporales del Super-Loop, se estimó el tiempo de ejecución en el peor caso (WCET) de las tareas principales.
 
-**Factor de uso del CPU (U):**
+**Metodología de medición:** se instrumentaron las tareas por software utilizando el contador de ciclos del núcleo (`DWT->CYCCNT`). Para cada tarea se tomaron marcas al inicio y al final y se calculó el tiempo transcurrido como:
 
 ```text
-U = 43 us / 1000 us = 0.043  =>  4.3%
+Δt = Δciclos / f_CPU
 ```
 
-Esto garantiza cumplimiento temporal del super-loop y evita pérdida de eventos críticos del ADC.
+Las mediciones se repitieron durante múltiples iteraciones del super-loop y se reportó el máximo observado bajo condiciones de mayor carga (decodificación activa y actualización de interfaces habilitadas), como aproximación experimental del peor caso.
 
-### 4.4.2 Consumo energético
+- **Periodo base del sistema (Tick):** 1.0 ms  
+- **Tiempo máximo de ejecución (WCET):** la tarea más pesada del sistema, correspondiente a la decodificación activa y actualización de interfaces (`App_Task_LightMorse`), registró un tiempo máximo medido de **43 μs**. Otras tareas de menor carga, como la lectura del botón de calibración (`SetupBtn_Task`), registraron tiempos del orden de **38 μs**.
 
-- **STM32:** 31.4 mA ± 0.3 mA en reposo; hasta 35.0 mA ± 0.9 mA (lectura intensiva).
-- **OLED:** 6.82 mA ± 0.01 mA. **LED:** 2.15 mA. **Buzzer:** 0.87 mA.
-- **HC-05:** 4.8 mA base; picos 5.3 mA ± 0.6 mA durante transmisión.
+**Factor de uso del CPU (U):** considerando el WCET medido sobre el período de 1 ms asignado:
 
-**Tabla 4.1: Consumo total estimado del sistema**
+```text
+U = 43 μs / 1000 μs = 0.043  =>  4.3%
+```
+
+Esto indica que el factor de uso del procesador es bajo y deja margen suficiente dentro del tick para el resto de tareas y variaciones de carga. En particular, se mantiene la ejecución no bloqueante del super-loop y se preserva la capacidad de atender eventos críticos (p. ej., muestreo/filtrado del ADC y detección de flancos) sin riesgo de pérdida por solapamiento.
+
+
+#### 4.4.2 Consumo energético
+
+Se midió la corriente consumida por los distintos subsistemas utilizando un multímetro digital. Las mediciones promedio arrojaron los siguientes resultados individuales:
+
+- **Microcontrolador (STM32):** 31.4 mA ± 0.3 mA en reposo, ascendiendo a un máximo de 35.0 mA ± 0.9 mA durante la lectura intensiva del LDR.
+- **Periféricos de visualización:** OLED 6.82 mA ± 0.01 mA. LED 2.15 mA. Buzzer 0.87 mA.
+- **Módulo Bluetooth (HC-05):** consumo base 4.8 mA, con picos de 5.3 mA ± 0.6 mA durante ráfagas de transmisión.
+
+Con base en estas características, se calculó el consumo total del sistema integrado, el cual se resume en la Tabla 4.1.
 
 | Estado del sistema | Consumo promedio (mA) |
-|---|---:|
-| Reposo (MCU en espera, OLED encendido, BT conectado sin transmisión) | 43.1 |
-| Activo (Decodificando, actualizando OLED, BT transmitiendo, LED y Buzzer ON) | 49.5 |
+| --- | ---: |
+| Reposo (MCU en espera, OLED encendido, BT conectado sin transmisión) | 43.1 mA |
+| Activo (Decodificando, actualizando OLED, BT transmitiendo, LED y Buzzer ON) | 49.5 mA |
+
+<em>Tabla 4.1 — Consumo total estimado del sistema.</em><br><br>
+
+Estos valores confirman que el diseño es de bajo consumo y apto para ser alimentado a través de un puerto USB estándar o mediante un banco de baterías portátil durante extensos periodos de operación continua.
+
 
 ### 4.4.3 Modo de bajo consumo
 
@@ -442,6 +484,32 @@ El prototipo Luz-Morse cumplió los objetivos, logrando un sistema embebido func
 
 <img src="docs/img/Figura6_2.png" width="850" />
 <em>Figura 6.2 — Regiones de memorias utilizadas por el programa.</em><br><br>
+
+# Manual rápido de usuario
+
+## 1) Encendido
+- Conectar la NUCLEO por USB.
+- Abrir PuTTY a 115200 bps (USART2 / Virtual COM Port).
+- Opcional: emparejar HC-05 y abrir una app tipo “Serial Bluetooth Terminal” a 9600 bps.
+
+## 2) Comandos principales (CLI)
+- `help`: muestra ayuda.
+- `status`: imprime modo, Tu, umbrales y estado.
+- `mode`: muestra el modo actual.
+- `mode morse`: decodificación con botón USER.
+- `mode light`: decodificación con linterna apuntando al LDR.
+- `mode ldr`: muestra porcentaje/barra del LDR para diagnóstico.
+- `mode setup`: guía la calibración de umbrales (LOW y HIGH).
+- `tu <ms>`: ajusta el tiempo base Tu.
+- `flash clear`: borra configuración guardada en Flash.
+
+## 3) Calibración (`mode setup`)
+- Ejecutar `mode setup`.
+- Seguir los mensajes: primero medir LOW y luego HIGH.
+- Luego pasar a `mode light` para decodificar con mejor estabilidad.
+
+## 4) Interpretación del OLED
+- Muestra modo actual, umbrales, barra del LDR, símbolo en construcción y última frase decodificada.
 
 # Bibliografía
 
