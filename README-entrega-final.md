@@ -17,7 +17,7 @@ Haidar Ali Morhell — Legajo 108.576
 
 **Fecha:** 06/03/26  
 
-*Trabajo realizado en la Ciudad Autónoma de Buenos Aires, entre diciembre de 2025 y febrero de 2026.*
+*Trabajo realizado en la Ciudad Autónoma de Buenos Aires, entre diciembre de 2025 y marzo de 2026.*
 </div>
 
 ---
@@ -43,7 +43,7 @@ Este proyecto aborda desafíos técnicos significativos como el acondicionamient
 | 1.4 | Documentación de integración Bluetooth (HC-05 por UART) + verificación de envío de caracteres a terminal/app. | 24/02/2026 |
 | 1.5 | Completar análisis de desempeño: WCET (App_Task_LightMorse = 43 µs), uso de CPU y redacción de criterios de medición. | 25/02/2026 |
 | 1.6 | Completar análisis energético: mediciones por módulo (MCU, OLED, LED, buzzer, HC-05) + tabla/resumen de consumo. | 26/02/2026 |
-| 1.7 | Revisión final de redacción + agregado de tabla de cumplimiento de requisitos y sección de trabajo futuro. | 27/02/2026 |
+| 1.7 | Revisión final de redacción + agregado de tabla de cumplimiento de requisitos y sección de trabajo futuro. | 05/03/2026 |
 
 <em>Tabla 0.1 — Registro de versiones del documento.</em><br><br>
 
