@@ -453,7 +453,6 @@ Se hace uso de `HAL_PWR_EnterSLEEPMode` y `HAL_PWR_EnterSTOPMode` para optimizar
 | 3.6 | FSM para decodificación (IDLE / DETECTING_PULSE / DETECTING_PAUSE). | N/A | 🟢 | ✅ |
 | 3.7 | Menú/flujo guiado de calibración con confirmación por botón + feedback. | 🟢 | 🟢 | ✅ |
 
-<em>Tabla X — Cumplimiento final de requisitos (versión final).</em><br><br>
 
 **Notas sobre requisitos no cumplidos/parciales:**
 - **2.1 DIP switches:** se descartó para priorizar estabilidad de decodificación y cierre de integración; la selección de modos se resolvió desde CLI.
