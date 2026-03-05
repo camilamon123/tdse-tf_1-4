@@ -161,3 +161,9 @@ Para cumplir con los requisitos de análisis del curso, se llevarán a cabo las 
 - ⬇️ Descargar fuente (Excel): [Diagrama_de_Gantt_TDSE.xlsx](Diagrama_de_Gantt_TDSE.xlsx)
 
 ---
+
+# Entrega final – Luz-Morse
+
+Informe completo: [README-entrega-final.md](README-entrega-final.md)
+
+Video: https://drive.google.com/file/d/1k0MoTVyF7XIBG3R9jAdmI5QU-V2r-khh/view?usp=sharing
