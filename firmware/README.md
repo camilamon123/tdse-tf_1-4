@@ -12,4 +12,4 @@ El proyecto STM32CubeIDE se entrega como ZIP listo para importar:
 2. `File → Import → Existing Projects into Workspace`.
 3. Seleccionar la carpeta descomprimida.
 
-> Nota: el proyecto se entrega como ZIP para evitar la limitación de carga masiva de archivos en GitHub Web. El contenido es únicamente código fuente y archivos de configuración (sin outputs Debug/Release).
+> Nota: el proyecto se entrega como ZIP para evitar la limitación de carga masiva de archivos en GitHub. El contenido es únicamente código fuente y archivos de configuración (sin outputs Debug/Release).
