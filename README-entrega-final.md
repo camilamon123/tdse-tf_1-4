@@ -351,8 +351,9 @@ La Figura 4.4 muestra el montaje utilizado para estas pruebas.
 <img src="docs/img/Figura4_4.png" width="700" />
 <em>Figura 4.4 — Montaje completo del circuito.</em><br><br>
 
-**Video explicativo sobre el proyecto:** `VN20260228_222425.mp4`  
-👉 Subir a YouTube/Drive y pegar el link acá: **(LINK_PENDIENTE)**
+**Video explicativo sobre el proyecto:**  
+📹 **Demostración de funcionamiento (Drive):** https://drive.google.com/file/d/1k0MoTVyF7XIBG3R9jAdmI5QU-V2r-khh/view?usp=sharing  
+*(archivo original: `VN20260228_222425.mp4`)*
 
 ## 4.4 Análisis de desempeño
 
