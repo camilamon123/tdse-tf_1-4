@@ -452,7 +452,6 @@ Se hace uso de `HAL_PWR_EnterSLEEPMode` y `HAL_PWR_EnterSTOPMode` para optimizar
 | 3.5 | Base de tiempos: SysTick 1 ms para temporización global. | N/A | 🟢 | ✅ |
 | 3.6 | FSM para decodificación (IDLE / DETECTING_PULSE / DETECTING_PAUSE). | N/A | 🟢 | ✅ |
 | 3.7 | Menú/flujo guiado de calibración con confirmación por botón + feedback. | 🟢 | 🟢 | ✅ |
-| 3.8 | Modos de operación completos NORMAL / SET_UP / FALLA (falla segura). | 🟡 | 🔴 | 🟡 |
 
 <em>Tabla X — Cumplimiento final de requisitos (versión final).</em><br><br>
 
