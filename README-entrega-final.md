@@ -485,7 +485,7 @@ Como resultado del proceso de ingeniería, se generó un conjunto de documentos 
 
 **Notas sobre requisitos no cumplidos/parciales:**
 - **2.1 DIP switches:** se descartó para priorizar estabilidad de decodificación y cierre de integración; la selección de modos se resolvió desde CLI.
-- **3.8 Modo FALLA:** el proyecto contempla el concepto, pero no se implementó un manejo completo de falla segura (se dejó como mejora futura).
+- **Modo FALLA:** el proyecto contempla el concepto, pero no se implementó un manejo completo de falla segura (se dejó como mejora futura).
 
 # Conclusiones
 
