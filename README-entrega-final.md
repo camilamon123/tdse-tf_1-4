@@ -179,6 +179,8 @@ Para la implementación del prototipo Luz-Morse se seleccionaron componentes com
 | Entrada de Usuario | Pulsador (Push Button) | Control de flujo. Utilizado para iniciar la rutina de calibración de umbrales de luz y oscuridad. |
 | Fuente de Energía | USB (5V) | Alimentación principal. El sistema se alimenta a través del puerto USB de la placa NUCLEO durante la etapa de prototipo. |
 
+<em>Tabla 2.4 — Listado componentes de hardware.</em><br><br>
+
 ---
 
 # Diseño e implementación
