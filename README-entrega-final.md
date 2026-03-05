@@ -162,6 +162,8 @@ En esta sección se describen los principales casos de uso asociados al funciona
 | Disparador | El usuario presiona el botón "Calibrar" para entrar en modo SET_UP. |
 | Flujo principal | 1. El sistema indica (ej. con un led parpadeando) que espera la medición de "oscuridad".<br>2. El usuario presiona el botón, y el sistema promedia varias lecturas del ADC para obtener el nivel base.<br>3. El sistema indica que espera la medición de "luz".<br>4. El usuario ilumina el sensor y presiona el botón. El sistema promedia las lecturas para obtener el nivel de señal.<br>5. Se calcula un umbral intermedio, se guarda en la E2PROM/Flash y se notifica la finalización exitosa. |
 
+La Tabla 2.2 y la Tabla 2.3 resumen cada caso de uso de manera estructurada, especificando los elementos relevantes y sus respectivas definiciones.
+
 ## 2.3  Hardware utilizado
 
 Para la implementación del prototipo Luz-Morse se seleccionaron componentes comerciales de bajo costo y alta disponibilidad, priorizando aquellos que permitieran una integración modular con la placa de desarrollo.
@@ -247,6 +249,8 @@ El código fuente se organizó en capas lógicas para asegurar la modularidad y 
 <img src="docs/img/Figura3_4.png" width="700" />
 <em>Figura 3.4 — Diagrama de capas del proyecto.</em><br><br>
 
+Para ilustrar de manera esquemática la jerarquía y las dependencias entre los distintos módulos detallados anteriormente, la Figura 3.4 presenta el diagrama de capas de la arquitectura de software implementada. Como se puede observar, el diseño asegura que la capa de Aplicación de alto nivel interactúe con la lógica de negocio, mientras que el acceso físico a los periféricos queda estrictamente aislado en la capa inferior de Drivers, garantizando así la portabilidad y escalabilidad del código.
+
 ### 3.2.2 Decodificación y Máquina de Estados (FSM)
 
 El núcleo algorítmico del sistema reside en el módulo `morse_decoder.c`, el cual modela la recepción del código Morse mediante una FSM que clasifica los eventos temporales.
@@ -260,6 +264,8 @@ La lógica de decisión se basa en una unidad de tiempo configurable (**Tu**), s
   - Mayor a `6.5·Tu`: fin de palabra (se inyecta un espacio `' '`).
 
 Para mitigar el ruido impulsivo y parpadeos espurios, se implementó una lógica de de-bouncing por software que descarta cualquier cambio de estado con una duración menor a 20 ms.
+
+Para representar gráficamente el comportamiento dinámico del algoritmo de decodificación, la Figura 3.5 ilustra la Máquina de Estados Finitos (FSM) implementada mediante un diagrama de estados (Statechart). En este esquema se detallan las condiciones de guardia basadas en la unidad de tiempo (Tu) y los eventos del sensor que disparan el cambio entre los estados reposo (IDLE), medición de señal (DETECTING_PULSE) y evaluación de silencio (DETECTING_PAUSE), así como las acciones de control ejecutadas al entrar, permanecer o salir de cada estado.
 
 <img src="docs/img/Figura3_5.png" width="700" />
 <em>Figura 3.5 — Diagrama de estados del algoritmo de decodificación.</em><br><br>
@@ -300,13 +306,17 @@ En este capítulo se presentan las pruebas realizadas para validar el funcionami
 
 ## 4.1 Pruebas funcionales del hardware
 
+Se verificó el correcto funcionamiento de los subsistemas físicos antes de la integración final.
+
 ### 4.1.1 Respuesta del Sensor LDR
 
 Se evaluó el comportamiento del divisor de tensión conformado por el LDR y el resistor de pull-down. Utilizando el modo de diagnóstico (`mode ldr`), se obtuvieron lecturas del ADC en distintas condiciones de iluminación:
 
 - **Oscuridad (sensor tapado):** 800–1500 cuentas.  
 - **Luz ambiente:** 1800–3800 cuentas.  
-- **Luz directa (linterna):** 3900–4095 (≈3.3 V).  
+- **Luz directa (linterna):** 3900–4095 (≈3.3 V).
+
+Estos resultados confirmaron que el rango dinámico del sensor es suficiente para discriminar los estados lógicos mediante software. Se aprecian estos resultados en la Figura 4.1: en las primeras capturas los valores de lectura del sensor se encuentran aproximadamente en un valor promedio de 1370 cuando se encuentra tapado; luego, al estar iluminado con luz ambiental, se obtiene un valor cercano a 3647; y finalmente, en saturación, se observa un valor cercano a 4000.
 
 <img src="docs/img/Figura4_1.png" width="700" />
 <em>Figura 4.1 — Lecturas del sensor LDR aplicadas a los tres casos.</em><br><br>
@@ -322,6 +332,8 @@ Se validó la comunicación con la pantalla OLED basada en SSD1306 utilizando SP
 
 La estrategia de actualización se diseñó para no interferir con la decodificación: la UI se refresca a una tasa baja (apta para visualización humana), y el procesamiento crítico (captura de flancos y clasificación punto/raya) se mantiene separado del renderizado de la pantalla.
 
+En la Figura 4.2 se puede apreciar el correcto funcionamiento del módulo, mostrando en tiempo real los parámetros de configuración actuales y el último mensaje decodificado.
+
 <img src="docs/img/Figura4_2.png" width="700" />
 <em>Figura 4.2 — Estado del sistema proyectado sobre el módulo OLED.</em><br><br>
 
@@ -333,20 +345,22 @@ Se compararon señales raw y filtradas (EMA en `ldr.c`). Se observó que el filt
 
 ### 4.2.2 Verificación de la Calibración Dinámica
 
-Se probó calibración en dos entornos (luz tenue y luz intensa), verificando persistencia tras reinicio y correcta visualización. La Figura 4.3 muestra la terminal Bluetooth y el comando `status` con parámetros actualizados.
+Se sometió al dispositivo a una prueba de calibración en dos entornos distintos: una habitación con luz tenue y una con luz artificial intensa.
 
-<img src="docs/img/Figura4_3.png" width="700" />
-<em>Figura 4.3 — Estado actual del sistema observada desde una terminal Bluetooth.</em><br><br>
+1. Se inició el modo SETUP mediante el pulsador.  
+2. Se registraron los valores de oscuridad y luz máxima.  
+3. Tras reiniciar el equipo, se verificó mediante UART que los valores de umbral (VTH) almacenados en la memoria Flash coincidieran con los calculados, validando la persistencia de datos del módulo `nv_store` y su correcta visualización sobre la pantalla OLED.  
 
+La Figura 4.3 expone la captura de la terminal serie vinculada por Bluetooth, donde se corrobora la respuesta exitosa al comando de estado (`status`) con los parámetros operativos actualizados tras la calibración.
 ## 4.3 Pruebas de integración
 
-Se realizó una prueba End-to-End transmitiendo mensajes conocidos ("SOS" y "HOLA") con una linterna LED manual.
+Se realizó una prueba de extremo a extremo ("End-to-End") transmitiendo mensajes conocidos en código Morse ("SOS" y "HOLA") utilizando una linterna LED manual a distintas distancias.
 
 **Resultados:**
-- **Tasa de acierto:** 10 intentos consecutivos a 1 m; decodificación correcta en todos los ensayos bajo velocidad manual consistente con `Tu`.  
-- **Conectividad:** pruebas a 1 m, 3 m, 5 m, 8 m y 10 m; enlace estable hasta 10 m en línea de visión, con latencia imperceptible.
+- **Tasa de acierto:** Se llevaron a cabo 10 intentos de transmisión consecutivos a 1 metro de distancia. El sistema decodificó correctamente la totalidad de los caracteres en todos los ensayos, demostrando una alta fiabilidad en la lectura del ADC siempre que la velocidad de emisión manual se mantuviera constante y en sintonía con el tiempo base (Tu) configurado.
+- **Conectividad:** Se evaluó la latencia y estabilidad del enlace Bluetooth enviando ráfagas de datos a 1m, 3m, 5m, 8m y 10m de distancia. La conexión del módulo HC-05 se mantuvo estable y sin pérdida de paquetes en todo el rango operativo (hasta 10 metros con línea de visión). Los caracteres aparecieron simultáneamente en la pantalla OLED y en el celular, con una latencia de transmisión imperceptible para el usuario.
 
-La Figura 4.4 muestra el montaje utilizado para estas pruebas.
+El ensamble físico utilizado para llevar a cabo estas pruebas de integración y validación final se ilustra en la Figura 4.4.
 
 <img src="docs/img/Figura4_4.png" width="700" />
 <em>Figura 4.4 — Montaje completo del circuito.</em><br><br>
@@ -403,9 +417,11 @@ Estos valores confirman que el diseño es de bajo consumo y apto para ser alimen
 
 ### 4.4.3 Modo de bajo consumo
 
-Se hace uso de `HAL_PWR_EnterSLEEPMode` y `HAL_PWR_EnterSTOPMode` para optimizar el consumo cuando el MCU no se encuentra activo. En este caso el factor de uso (U) disminuye a aproximadamente 0.044.
+Para un mejor aprovechamiento de energía se hace uso de las funciones `HAL_PWR_EnterSLEEPMode` y `HAL_PWR_EnterSTOPMode` para reducir el consumo cuando el microcontrolador no se encuentra procesando activamente (por ejemplo, entre eventos o en estados de espera). Esto permite disminuir el consumo total del sistema sin afectar el determinismo temporal del super-loop cuando el procesamiento vuelve a activarse.
 
 ## 4.5 Comparación con otros sistemas similares
+
+Para validar la utilidad del sistema desarrollado, se comparó el prototipo Luz-Morse con las otras soluciones tecnológicas analizadas inicialmente en el Capítulo 1, así como con el método tradicional (decodificación humana). La tabla siguiente resume las características clave de cada enfoque.
 
 | Característica | Modelo Luz-Morse | Decodificador de audio (App móvil) | Decodificación manual (Oído humano) |
 |---|---|---|---|
@@ -416,7 +432,11 @@ Se hace uso de `HAL_PWR_EnterSLEEPMode` y `HAL_PWR_EnterSTOPMode` para optimizar
 | Costo de Hardware | Bajo (NUCLEO + LDR + Componentes básicos) | Alto (Requiere Smartphone de gama media/alta) | Nulo (Solo entrenamiento) |
 | Velocidad de Respuesta | Tiempo Real (< 200 ms por letra) | Tiempo Real (Depende del procesador) | Lenta (Requiere transcripción posterior) |
 
+El sistema Luz-Morse demuestra ser superior en escenarios donde el canal de audio está saturado o no es confiable (por ejemplo, ambientes industriales ruidosos) o donde se requiere sigilo (comunicación visual a distancia). Aunque una App móvil puede resultar más versátil, depende de un hardware costoso y genérico, mientras que el prototipo ofrece una solución dedicada, robusta y de bajo costo.
+
 ## 4.6 Documentación del desarrollo realizado
+
+Como resultado del proceso de ingeniería, se generó un conjunto de documentos y archivos que respaldan el diseño, la implementación y el mantenimiento futuro del sistema. A continuación se listan los entregables técnicos que conforman el legajo del proyecto.
 
 | ID | Entregable | Descripción / Archivo |
 |---|---|---|
@@ -479,9 +499,11 @@ El prototipo Luz-Morse cumplió los objetivos, logrando un sistema embebido func
 
 ## 7.2 Próximos pasos
 
-- **Evolución del sensor óptico:** reemplazar LDR por fototransistor/fotodiodo para mayor velocidad (WPM).
-- **Detección automática de velocidad:** estimar `Tu` dinámicamente analizando los primeros símbolos.
-- **Migración a RTOS:** para escalar funcionalidades (p. ej., SD, más interfaces), considerar FreeRTOS.
+A partir de la experiencia adquirida y las limitaciones detectadas durante los ensayos del prototipo actual, se proponen las siguientes líneas de trabajo para futuras actualizaciones del sistema:
+
+- **Evolución del sensor óptico:** Reemplazar el LDR (fotorresistencia) por un fototransistor o fotodiodo. El LDR posee una inercia que limita la velocidad de detección a bajas tasas de palabras por minuto (WPM). Un sensor semiconductor permitiría decodificar transmisiones de mayor velocidad.
+- **Detección automática de velocidad:** Implementar un algoritmo que calcule el tiempo base (Tu) dinámicamente analizando los primeros símbolos recibidos, eliminando la necesidad de configuración manual de la velocidad.
+- **Migración a RTOS:** Para escalar el sistema (por ejemplo, agregando registro en SD o más interfaces), convendría migrar la arquitectura actual a un sistema operativo en tiempo real (como FreeRTOS) para facilitar la gestión de prioridades y tiempos de espera.
 
 # Anexo
 
