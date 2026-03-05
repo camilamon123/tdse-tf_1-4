@@ -5,7 +5,7 @@ Este directorio contiene el proyecto STM32CubeIDE para la NUCLEO-F103RB.
 ## Código fuente
 El proyecto STM32CubeIDE se entrega como ZIP listo para importar:
 
-- `luz-morse-fw-clean.zip`
+- `luz-morse-fw-final.zip`
 
 **Importar en CubeIDE:**
 1. Descomprimir el ZIP.
