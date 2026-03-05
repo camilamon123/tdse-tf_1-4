@@ -2,11 +2,14 @@
 
 Este directorio contiene el proyecto STM32CubeIDE para la NUCLEO-F103RB.
 
-## Cómo compilar y flashear
-1. Abrir STM32CubeIDE.
-2. File → Import → Existing Projects into Workspace.
-3. Seleccionar esta carpeta.
-4. Build (Debug).
-5. Run/Debug para flashear con ST-Link.
+## Código fuente
+El proyecto STM32CubeIDE se entrega como ZIP listo para importar:
+
+- `luz-morse-fw-clean.zip`
+
+**Importar en CubeIDE:**
+1. Descomprimir el ZIP.
+2. `File → Import → Existing Projects into Workspace`.
+3. Seleccionar la carpeta descomprimida.
 
 Código fuente se incorporará en esta carpeta (firmware/) sin outputs Debug/Release.
