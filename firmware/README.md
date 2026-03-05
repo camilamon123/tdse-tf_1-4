@@ -9,4 +9,4 @@ Este directorio contiene el proyecto STM32CubeIDE para la NUCLEO-F103RB.
 4. Build (Debug).
 5. Run/Debug para flashear con ST-Link.
 
-> Nota: no se versionan outputs de build (Debug/Release) ni binarios.
+Código fuente se incorporará en esta carpeta (firmware/) sin outputs Debug/Release.
