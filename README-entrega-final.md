@@ -15,7 +15,7 @@ Camila Sol Monforte — Legajo 107.193
 Federico Spratte — Legajo 105.694  
 Haidar Ali Morhell — Legajo 108.576  
 
-**Fecha:** dd/mm/aa  
+**Fecha:** 06/03/26  
 
 *Trabajo realizado en la Ciudad Autónoma de Buenos Aires, entre diciembre de 2025 y febrero de 2026.*
 </div>
