@@ -57,19 +57,19 @@ Este proyecto aborda desafíos técnicos significativos como el acondicionamient
 - [Introducción específica](#introducción-específica)
   - [2.1 Requisitos](#21-requisitos)
   - [2.2 Casos de uso](#22-casos-de-uso)
-  - [2.3  Hardware utilizado](#23--hardware-utilizado)
+  - [2.3  Hardware utilizado](#23-hardware-utilizado)
 - [Diseño e implementación](#diseño-e-implementación)
   - [3.1 Hardware del sistema](#31-hardware-del-sistema)
     - [3.1.1 Módulo de sensado y acondicionamiento](#311-módulo-de-sensado-y-acondicionamiento)
     - [3.1.2 Interfaces de salida y comunicación](#312-interfaces-de-salida-y-comunicación)
     - [3.1.3 Asignación de recursos del microcontrolador](#313-asignación-de-recursos-del-microcontrolador)
-  - [3.2 Firmware del  sistema](#32-firmware-del--sistema)
+  - [3.2 Firmware del  sistema](#32-firmware-del-sistema)
     - [3.2.1 Arquitectura de software](#321-arquitectura-de-software)
     - [3.2.2 Decodificación y Máquina de Estados (FSM)](#322-decodificación-y-máquina-de-estados-fsm)
     - [3.2.3 Interfaz de Comando (CLI) y Modos de Operación](#323-interfaz-de-comando-cli-y-modos-de-operación)
     - [3.2.4 Algoritmo de Calibración Dinámica](#324-algoritmo-de-calibración-dinámica)
     - [3.2.5 Persistencia de Datos](#325-persistencia-de-datos)
-- [Ensayos y resultados](#ensayos-y-resultados)
+- [4 Ensayos y resultados](#ensayos-y-resultados)
   - [4.1 Pruebas funcionales del hardware](#41-pruebas-funcionales-del-hardware)
     - [4.1.1 Respuesta del Sensor LDR](#411-respuesta-del-sensor-ldr)
     - [4.1.2 Interfaz de visualización (OLED)](#412-interfaz-de-visualización-oled)
@@ -83,11 +83,11 @@ Este proyecto aborda desafíos técnicos significativos como el acondicionamient
     - [4.4.3 Modo de bajo consumo](#443-modo-de-bajo-consumo)
   - [4.5 Comparación con otros sistemas similares](#45-comparación-con-otros-sistemas-similares)
   - [4.6 Documentación del desarrollo realizado](#46-documentación-del-desarrollo-realizado)
-- [Cumplimiento de requisitos (versión final)](#6-cumplimiento-de-requisitos-versión-final)
-- [Conclusiones](#conclusiones)
-  - [7.1 Resultados obtenidos](#71-resultados-obtenidos)
-  - [7.2 Próximos pasos](#72-próximos-pasos)
-- [Anexo](#anexo)
+  - [4.7 Cumplimiento de requisitos (versión final)](#47-cumplimiento-de-requisitos)
+  - [4.8 Anexo](#48-anexo)
+- [5 Conclusiones](#conclusiones)
+  - [5.1 Resultados obtenidos](#51-resultados-obtenidos)
+  - [5.2 Próximos pasos](#52-próximos-pasos)
 - [Bibliografía](#bibliografía)
 
 ---
@@ -183,6 +183,44 @@ Para la implementación del prototipo Luz-Morse se seleccionaron componentes com
 
 ---
 
+### 2.3.1 Placa con microcontrolador (NUCLEO-F103RB)
+
+El desarrollo se realizó sobre la placa NUCLEO-F103RB (STM32F103RBT6, ARM Cortex-M3), por ser la plataforma adoptada por la cátedra y contar con los periféricos necesarios para este proyecto: ADC de 12 bits para sensado analógico, timers y SysTick para base de tiempos, SPI para la pantalla OLED y UART para comunicación serie/Bluetooth. La placa además incorpora ST-Link, lo que simplifica la etapa de depuración y programación sin hardware adicional.
+
+La alimentación del prototipo se realizó mediante el puerto USB de la NUCLEO, lo que permitió mantener un entorno de pruebas estable y reproducible durante el desarrollo.
+
+### 2.3.2 Sensor de luz (LDR) y divisor resistivo
+
+La entrada principal del sistema es un LDR utilizado como transductor óptico. Su resistencia varía con la iluminación, por lo que se implementó un divisor resistivo con una resistencia fija de 10 kΩ para convertir dicha variación en una tensión analógica compatible con el ADC (rango 0–3,3 V). El punto medio del divisor se conectó al pin analógico PA0 (ADC1_IN0), permitiendo digitalizar el nivel de luz y procesarlo en firmware.
+
+Se optó por no agregar filtrado analógico adicional (por ejemplo RC o amplificadores operacionales), delegando el filtrado a software (filtro digital y umbrales con histéresis) para mantener baja complejidad y mejorar la flexibilidad frente a distintos entornos de iluminación.
+
+### 2.3.3 Pantalla OLED (SSD1306)
+
+Se incorporó una pantalla OLED de 0,96" con controlador SSD1306 como interfaz local de usuario. La elección se basó en su disponibilidad, bajo consumo y facilidad de integración. Se utilizó la interfaz SPI, lo que permite un refresco rápido con pocos pines y sin saturar el tiempo de CPU.
+
+La pantalla se emplea para mostrar modo actual, umbrales (`th_low`, `th_high`), porcentaje del LDR (barra), símbolo en construcción y último texto decodificado, facilitando la operación sin depender exclusivamente de una terminal externa.
+
+### 2.3.4 Módulo Bluetooth (HC-05, SPP)
+
+Para la salida inalámbrica se utilizó un módulo HC-05 en perfil SPP (puente serie transparente). Se eligió por su simplicidad: del lado del microcontrolador se comporta como una UART estándar, y del lado del usuario permite visualizar texto en aplicaciones tipo “Serial Bluetooth Terminal”.
+
+El HC-05 se alimentó desde 5 V (por requerimiento del módulo) y se conectó a USART1 (PA9/PA10) para transmitir los caracteres decodificados. Adicionalmente se utilizó la señal STATE del módulo como entrada digital para detectar enlace activo.
+
+### 2.3.5 Actuadores de feedback (LED y buzzer)
+
+Se incorporó un LED externo y un buzzer activo para feedback inmediato durante la decodificación. El LED replica eventos relevantes (por ejemplo detección de letra/espacio/error) y el buzzer provee confirmación auditiva en condiciones donde la pantalla o el celular no son prácticos.
+
+Ambos actuadores se accionan mediante GPIO, con temporización no bloqueante desde el super-loop para no interferir con la medición de tiempos del código Morse.
+
+### 2.3.6 Entrada de usuario (pulsador)
+
+Se utilizó el pulsador USER de la NUCLEO (PC13) como entrada principal de usuario para iniciar y confirmar los pasos de calibración (`mode setup`). La elección se justifica por disponibilidad inmediata y confiabilidad mecánica, evitando agregar componentes externos innecesarios.
+
+### 2.3.7 Alimentación y niveles lógicos
+
+El sistema opera con dos dominios principales: 3,3 V para el STM32 y periféricos compatibles (ADC, OLED y GPIO), y 5 V para el módulo HC-05 y el buzzer activo (según el modelo). Se mantuvo masa común (GND) en todo el prototipo para garantizar referencia eléctrica consistente y evitar lecturas erróneas del ADC.
+
 # Diseño e implementación
 
 En este capítulo se detalla el proceso de desarrollo del sistema Luz-Morse, abarcando tanto la arquitectura de hardware seleccionada como la estructura del firmware implementado. Se describen los criterios de diseño, la asignación de recursos del microcontrolador y los algoritmos utilizados para el procesamiento de señales en tiempo real.
@@ -191,14 +229,14 @@ En este capítulo se detalla el proceso de desarrollo del sistema Luz-Morse, aba
 
 El diseño del hardware se centró en la simplicidad y la modularidad, utilizando una plataforma de desarrollo estándar complementada con periféricos específicos para la entrada y salida de señales. Como se ilustra en la Figura 3.1, la arquitectura general del sistema se basa en la placa de desarrollo NUCLEO-F103RB, equipada con un microcontrolador STM32F103RBT6 (ARM Cortex-M3) que actúa como núcleo de procesamiento. A este cerebro se enlazan directamente el módulo del sensado óptico, las interfaces locales de usuario y el puente de comunicación inalámbrica.
 
-<img src="docs/img/Figura3_1.png?v=2" width="700" />
+<img src="docs/img/Figura3_1.png?v=2" width="550" />
 <em>Figura 3.1 — Arquitectura funcional a nivel de bloques.</em><br><br>
 
 ### 3.1.1 Módulo de sensado y acondicionamiento
 
-La interfaz de entrada principal es un sensor de luz basado en un fotorresistor (LDR). Dado que la resistencia del LDR varía inversamente con la intensidad lumínica incidente, se implementó un circuito divisor de tensión junto con un resistor de valor fijo, tal como se observa en el esquema de la Figura 3.2. Este arreglo convierte las variaciones de resistencia en una señal de tensión analógica dentro del rango de operación del microcontrolador (0 - 3.3V).
+La interfaz de entrada principal es un sensor de luz basado en un fotorresistor (LDR). Dado que la resistencia del LDR varía inversamente con la intensidad lumínica incidente, se implementó un circuito divisor de tensión junto con un resistor de valor fijo, tal como se observa en el esquema de la Figura 3.2. Este arreglo convierte las variaciones de resistencia en una señal de tensión analógica dentro del rango de operación del microcontrolador (0-3,3 V).
 
-<img src="docs/img/Figura3_2.png" width="700" />
+<img src="docs/img/Figura3_2.png" width="200" />
 <em>Figura 3.2 — Esquema del circuito divisor de tensión para el sensor LDR.</em><br><br>
 
 La señal analógica resultante ingresa al microcontrolador a través del pin PA0, configurado como entrada analógica, donde es digitalizada para su posterior procesamiento. No se utilizaron filtros analógicos externos complejos (hardware), delegando la tarea de filtrado de ruido al firmware para reducir costos y complejidad de montaje.
@@ -213,7 +251,7 @@ Para la transmisión de los datos decodificados, se integró un módulo Bluetoot
 
 Para garantizar un control preciso y determinista de los periféricos, se realizó una asignación específica de los pines y recursos internos del STM32F103RB. La distribución física de estas conexiones sobre la placa de desarrollo se ilustra en el diagrama de la Figura 3.3, el cual facilita la comprensión del montaje y la replicabilidad del prototipo.
 
-<img src="docs/img/Figura3_3.png" width="700" />
+<img src="docs/img/Figura3_3.png" width="500" />
 <em>Figura 3.3 — Diagrama de conexiones y asignación de pines en la placa NUCLEO-F103RB.</em><br><br>
 
 A continuación, la Tabla 3.1 detalla la función lógica específica asignada a cada recurso de hardware listado en el esquema anterior.
@@ -232,7 +270,7 @@ A continuación, la Tabla 3.1 detalla la función lógica específica asignada a
 | Buzzer (feedback) | PB10 | D6 | Beep corto al detectar letra/error (no bloqueante). |
 | USER button | PC13 | B1 USER | Entrada digital: modo morse por botón y pasos de setup. |
 
-**Alimentación:** todo el sistema opera a **3.3 V** (menos el **HC-05, 5V**) y **GND común**.
+**Alimentación:** todo el sistema opera a **3,3 V** (excepto el **HC-05: 5 V**) y **GND común**.
 
 <em>Tabla 3.1 — Mapa de conexiones y recursos del MCU.</em><br><br>
 
@@ -248,7 +286,7 @@ El código fuente se organizó en capas lógicas para asegurar la modularidad y 
 2. **Capa de Aplicación:** el módulo central `app.c` orquesta el flujo del programa, despachando tareas periódicas como el muestreo de luz, la actualización de la interfaz de usuario, la gestión de CLI y la actualización de interfaz gráfica mediante `oled_ui.c`.  
 3. **Capa de Procesamiento:** `morse_decoder.c`, que contiene la lógica algorítmica para la interpretación de tiempos y traducción de símbolos.
 
-<img src="docs/img/Figura3_4.png" width="700" />
+<img src="docs/img/Figura3_4.png" width="600" />
 <em>Figura 3.4 — Diagrama de capas del proyecto.</em><br><br>
 
 Para ilustrar de manera esquemática la jerarquía y las dependencias entre los distintos módulos detallados anteriormente, la Figura 3.4 presenta el diagrama de capas de la arquitectura de software implementada. Como se puede observar, el diseño asegura que la capa de Aplicación de alto nivel interactúe con la lógica de negocio, mientras que el acceso físico a los periféricos queda estrictamente aislado en la capa inferior de Drivers, garantizando así la portabilidad y escalabilidad del código.
@@ -269,7 +307,7 @@ Para mitigar el ruido impulsivo y parpadeos espurios, se implementó una lógica
 
 Para representar gráficamente el comportamiento dinámico del algoritmo de decodificación, la Figura 3.5 ilustra la Máquina de Estados Finitos (FSM) implementada mediante un diagrama de estados (Statechart). En este esquema se detallan las condiciones de guardia basadas en la unidad de tiempo (Tu) y los eventos del sensor que disparan el cambio entre los estados reposo (IDLE), medición de señal (DETECTING_PULSE) y evaluación de silencio (DETECTING_PAUSE), así como las acciones de control ejecutadas al entrar, permanecer o salir de cada estado.
 
-<img src="docs/img/Figura3_5.png" width="700" />
+<img src="docs/img/Figura3_5.png" width="650" />
 <em>Figura 3.5 — Diagrama de estados del algoritmo de decodificación.</em><br><br>
 
 ### 3.2.3 Interfaz de Comando (CLI) y Modos de Operación
@@ -316,11 +354,11 @@ Se evaluó el comportamiento del divisor de tensión conformado por el LDR y el 
 
 - **Oscuridad (sensor tapado):** 800–1500 cuentas.  
 - **Luz ambiente:** 1800–3800 cuentas.  
-- **Luz directa (linterna):** 3900–4095 (≈3.3 V).
+- **Luz directa (linterna):** 3900–4095 (≈3,3 V).
 
 Estos resultados confirmaron que el rango dinámico del sensor es suficiente para discriminar los estados lógicos mediante software. Se aprecian estos resultados en la Figura 4.1: en las primeras capturas los valores de lectura del sensor se encuentran aproximadamente en un valor promedio de 1370 cuando se encuentra tapado; luego, al estar iluminado con luz ambiental, se obtiene un valor cercano a 3647; y finalmente, en saturación, se observa un valor cercano a 4000.
 
-<img src="docs/img/Figura4_1.png" width="700" />
+<img src="docs/img/Figura4_1.png" width="320" />
 <em>Figura 4.1 — Lecturas del sensor LDR aplicadas a los tres casos.</em><br><br>
 
 ### 4.1.2 Interfaz de visualización (OLED)
@@ -336,7 +374,7 @@ La estrategia de actualización se diseñó para no interferir con la decodifica
 
 En la Figura 4.2 se puede apreciar el correcto funcionamiento del módulo, mostrando en tiempo real los parámetros de configuración actuales y el último mensaje decodificado.
 
-<img src="docs/img/Figura4_2.png" width="700" />
+<img src="docs/img/Figura4_2.png" width="260" />
 <em>Figura 4.2 — Estado del sistema proyectado sobre el módulo OLED.</em><br><br>
 
 ## 4.2 Pruebas funcionales del firmware
@@ -357,7 +395,7 @@ Se sometió al dispositivo a una prueba de calibración en dos entornos distinto
 
 La Figura 4.3 expone la captura de la terminal serie vinculada por Bluetooth, donde se corrobora la respuesta exitosa al comando de estado (`status`) con los parámetros operativos actualizados tras la calibración.
 
-<img src="docs/img/Figura4_3.png" width="700" />
+<img src="docs/img/Figura4_3.png" width="300" />
 <em>Figura 4.3 — Estado actual del sistema observada desde una terminal Bluetooth.</em><br><br>
 
 ## 4.3 Pruebas de integración
@@ -370,7 +408,7 @@ Se realizó una prueba de extremo a extremo ("End-to-End") transmitiendo mensaje
 
 El ensamble físico utilizado para llevar a cabo estas pruebas de integración y validación final se ilustra en la Figura 4.4.
 
-<img src="docs/img/Figura4_4.png" width="700" />
+<img src="docs/img/Figura4_4.png" width="320" />
 <em>Figura 4.4 — Montaje completo del circuito.</em><br><br>
 
 **Video explicativo sobre el proyecto:**  
@@ -393,13 +431,13 @@ Para verificar que el sistema cumple con las restricciones temporales del Super-
 
 Las mediciones se repitieron durante múltiples iteraciones del super-loop y se reportó el máximo observado bajo condiciones de mayor carga (decodificación activa y actualización de interfaces habilitadas), como aproximación experimental del peor caso.
 
-- **Periodo base del sistema (Tick):** 1.0 ms  
+- **Periodo base del sistema (Tick):** 1,0 ms  
 - **Tiempo máximo de ejecución (WCET):** la tarea más pesada del sistema, correspondiente a la decodificación activa y actualización de interfaces (`App_Task_LightMorse`), registró un tiempo máximo medido de **43 μs**. Otras tareas de menor carga, como la lectura del botón de calibración (`SetupBtn_Task`), registraron tiempos del orden de **38 μs**.
 
 **Factor de uso del CPU (U):** considerando el WCET medido sobre el período de 1 ms asignado:
 
 ```text
-U = 43 μs / 1000 μs = 0.043  =>  4.3%
+U = 43 μs / 1000 μs = 0,043  =>  4,3%
 ```
 
 Esto indica que el factor de uso del procesador es bajo y deja margen suficiente dentro del tick para el resto de tareas y variaciones de carga. En particular, se mantiene la ejecución no bloqueante del super-loop y se preserva la capacidad de atender eventos críticos (p. ej., muestreo/filtrado del ADC y detección de flancos) sin riesgo de pérdida por solapamiento.
@@ -409,16 +447,16 @@ Esto indica que el factor de uso del procesador es bajo y deja margen suficiente
 
 Se midió la corriente consumida por los distintos subsistemas utilizando un multímetro digital. Las mediciones promedio arrojaron los siguientes resultados individuales:
 
-- **Microcontrolador (STM32):** 31.4 mA ± 0.3 mA en reposo, ascendiendo a un máximo de 35.0 mA ± 0.9 mA durante la lectura intensiva del LDR.
-- **Periféricos de visualización:** OLED 6.82 mA ± 0.01 mA. LED 2.15 mA. Buzzer 0.87 mA.
-- **Módulo Bluetooth (HC-05):** consumo base 4.8 mA, con picos de 5.3 mA ± 0.6 mA durante ráfagas de transmisión.
+- **Microcontrolador (STM32):** 31,4 mA ± 0,3 mA en reposo, ascendiendo a un máximo de 35,0 mA ± 0,9 mA durante la lectura intensiva del LDR.
+- **Periféricos de visualización:** OLED 6,82 mA ± 0,01 mA. LED 2,15 mA. Buzzer 0,87 mA.
+- **Módulo Bluetooth (HC-05):** consumo base 4,8 mA, con picos de 5,3 mA ± 0,6 mA durante ráfagas de transmisión.
 
 Con base en estas características, se calculó el consumo total del sistema integrado, el cual se resume en la Tabla 4.1.
 
 | Estado del sistema | Consumo promedio (mA) |
 | --- | ---: |
-| Reposo (MCU en espera, OLED encendido, BT conectado sin transmisión) | 43.1 mA |
-| Activo (Decodificando, actualizando OLED, BT transmitiendo, LED y Buzzer ON) | 49.5 mA |
+| Reposo (MCU en espera, OLED encendido, BT conectado sin transmisión) | 43,1 mA |
+| Activo (Decodificando, actualizando OLED, BT transmitiendo, LED y Buzzer ON) | 49,5 mA |
 
 <em>Tabla 4.1 — Consumo total estimado del sistema.</em><br><br>
 
@@ -457,7 +495,7 @@ Como resultado del proceso de ingeniería, se generó un conjunto de documentos 
 | FW-02 | Diagramas de Flujo | Representación gráfica de la Máquina de Estados Finitos (FSM) del decodificador y el flujo de calibración. |
 | MAN-01 | Manual de Usuario | Guía rápida para la operación del dispositivo: conexión Bluetooth, interpretación de la pantalla OLED y procedimiento de calibración. |
 
-## 6 Cumplimiento de requisitos (versión final)
+## 4.7 Cumplimiento de requisitos
 
 | ID | Requisito (versión final) | Hardware | Software | Estado final |
 | --- | --- | :---: | :---: | :---: |
@@ -489,38 +527,12 @@ Como resultado del proceso de ingeniería, se generó un conjunto de documentos 
 - **2.1 DIP switches:** se descartó para priorizar estabilidad de decodificación y cierre de integración; la selección de modos se resolvió desde CLI.
 - **Modo FALLA:** el proyecto contempla el concepto, pero no se implementó un manejo completo de falla segura (se dejó como mejora futura).
 
-# Conclusiones
+# 4.8 Anexo
 
-El desarrollo del prototipo **Luz-Morse** cumplió satisfactoriamente con los objetivos planteados, logrando la implementación de un sistema embebido funcional, eficiente y de bajo costo, capaz de decodificar señales ópticas en tiempo real. Los principales logros del proyecto se resumen a continuación:
-
-- **Eficacia:** Se logró una tasa de acierto increíblemente alta en la decodificación bajo condiciones controladas a 1 metro de distancia. Esto demuestra la efectividad del filtro digital de media móvil y del algoritmo de calibración dinámica, los cuales lograron mitigar exitosamente el ruido inherente al sensor LDR.
-- **Alta eficiencia computacional:** La arquitectura de software *bare-metal* orientada a eventos demostró un rendimiento óptimo. Con un tiempo de ejecución en el peor de los casos (WCET) de tan solo **43 us** y un uso de CPU del **4.3%**, el sistema garantiza el determinismo temporal necesario para procesar el código Morse sin pérdida de datos.
-- **Bajo consumo energético:** El sistema integrado registró un consumo máximo inferior a **50 mA** en plena operación, lo que lo hace viable para su uso como dispositivo portátil alimentado a baterías.
-- **Experiencia de usuario completa:** La incorporación de una memoria no volátil emulada para la persistencia de los umbrales de calibración, combinada con el feedback local y remoto, resultó en un dispositivo autónomo y de fácil operación.
-
-## 7.1 Resultados obtenidos
-
-El prototipo Luz-Morse cumplió los objetivos, logrando un sistema embebido funcional, eficiente y de bajo costo. Principales logros:
-
-- **Eficacia:** alta tasa de acierto bajo condiciones controladas a 1 m, demostrando efectividad del filtro y calibración dinámica.
-- **Alta eficiencia computacional:** WCET 43 µs y uso de CPU 4.3%, garantizando determinismo temporal.
-- **Bajo consumo energético:** consumo máximo inferior a 50 mA en plena operación.
-- **Experiencia de usuario completa:** persistencia de umbrales + feedback local y remoto, resultando en operación autónoma y sencilla.
-
-## 7.2 Próximos pasos
-
-A partir de la experiencia adquirida y las limitaciones detectadas durante los ensayos del prototipo actual, se proponen las siguientes líneas de trabajo para futuras actualizaciones del sistema:
-
-- **Evolución del sensor óptico:** Reemplazar el LDR (fotorresistencia) por un fototransistor o fotodiodo. El LDR posee una inercia que limita la velocidad de detección a bajas tasas de palabras por minuto (WPM). Un sensor semiconductor permitiría decodificar transmisiones de mayor velocidad.
-- **Detección automática de velocidad:** Implementar un algoritmo que calcule el tiempo base (Tu) dinámicamente analizando los primeros símbolos recibidos, eliminando la necesidad de configuración manual de la velocidad.
-- **Migración a RTOS:** Para escalar el sistema (por ejemplo, agregando registro en SD o más interfaces), convendría migrar la arquitectura actual a un sistema operativo en tiempo real (como FreeRTOS) para facilitar la gestión de prioridades y tiempos de espera.
-
-# Anexo
-
-<img src="docs/img/Figura6_1.png" width="850" />
+<img src="docs/img/Figura6_1.png" width="650" />
 <em>Figura 6.1 — Resultado de análisis de compilación del programa.</em><br><br>
 
-<img src="docs/img/Figura6_2.png" width="850" />
+<img src="docs/img/Figura6_2.png" width="690" />
 <em>Figura 6.2 — Regiones de memorias utilizadas por el programa.</em><br><br>
 
 # Manual rápido de usuario
@@ -548,6 +560,32 @@ A partir de la experiencia adquirida y las limitaciones detectadas durante los e
 
 ## 4) Interpretación del OLED
 - Muestra modo actual, umbrales, barra del LDR, símbolo en construcción y última frase decodificada.
+
+# 5 Conclusiones
+
+El desarrollo del prototipo **Luz-Morse** cumplió satisfactoriamente con los objetivos planteados, logrando la implementación de un sistema embebido funcional, eficiente y de bajo costo, capaz de decodificar señales ópticas en tiempo real. Los principales logros del proyecto se resumen a continuación:
+
+- **Eficacia:** Se logró una tasa de acierto increíblemente alta en la decodificación bajo condiciones controladas a 1 metro de distancia. Esto demuestra la efectividad del filtro digital de media móvil y del algoritmo de calibración dinámica, los cuales lograron mitigar exitosamente el ruido inherente al sensor LDR.
+- **Alta eficiencia computacional:** La arquitectura de software *bare-metal* orientada a eventos demostró un rendimiento óptimo. Con un tiempo de ejecución en el peor de los casos (WCET) de tan solo **43 µs** y un uso de CPU del **4,3%**, el sistema garantiza el determinismo temporal necesario para procesar el código Morse sin pérdida de datos.
+- **Bajo consumo energético:** El sistema integrado registró un consumo máximo inferior a **50 mA** en plena operación, lo que lo hace viable para su uso como dispositivo portátil alimentado a baterías.
+- **Experiencia de usuario completa:** La incorporación de una memoria no volátil emulada para la persistencia de los umbrales de calibración, combinada con el feedback local y remoto, resultó en un dispositivo autónomo y de fácil operación.
+
+## 5.1 Resultados obtenidos
+
+El prototipo Luz-Morse cumplió los objetivos, logrando un sistema embebido funcional, eficiente y de bajo costo. Principales logros:
+
+- **Eficacia:** alta tasa de acierto bajo condiciones controladas a 1 m, demostrando efectividad del filtro y calibración dinámica.
+- **Alta eficiencia computacional:** WCET 43 µs y uso de CPU 4,3%, garantizando determinismo temporal.
+- **Bajo consumo energético:** consumo máximo inferior a 50 mA en plena operación.
+- **Experiencia de usuario completa:** persistencia de umbrales + feedback local y remoto, resultando en operación autónoma y sencilla.
+
+## 5.2 Próximos pasos
+
+A partir de la experiencia adquirida y las limitaciones detectadas durante los ensayos del prototipo actual, se proponen las siguientes líneas de trabajo para futuras actualizaciones del sistema:
+
+- **Evolución del sensor óptico:** Reemplazar el LDR (fotorresistencia) por un fototransistor o fotodiodo. El LDR posee una inercia que limita la velocidad de detección a bajas tasas de palabras por minuto (WPM). Un sensor semiconductor permitiría decodificar transmisiones de mayor velocidad.
+- **Detección automática de velocidad:** Implementar un algoritmo que calcule el tiempo base (Tu) dinámicamente analizando los primeros símbolos recibidos, eliminando la necesidad de configuración manual de la velocidad.
+- **Migración a RTOS:** Para escalar el sistema (por ejemplo, agregando registro en SD o más interfaces), convendría migrar la arquitectura actual a un sistema operativo en tiempo real (como FreeRTOS) para facilitar la gestión de prioridades y tiempos de espera.
 
 # Bibliografía
 
