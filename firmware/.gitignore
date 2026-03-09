@@ -1,0 +1,15 @@
+# STM32CubeIDE / Eclipse build outputs
+**/Debug/
+**/Release/
+**/*.o
+**/*.d
+**/*.su
+**/*.map
+**/*.elf
+**/*.hex
+**/*.bin
+**/*.list
+
+# IDE metadata (opcional, si quieren evitarlo)
+**/.metadata/
+**/.recommenders/
