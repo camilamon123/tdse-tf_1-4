@@ -84,7 +84,9 @@ Este proyecto aborda desafíos técnicos significativos como el acondicionamient
   - [4.5 Comparación con otros sistemas similares](#45-comparación-con-otros-sistemas-similares)
   - [4.6 Documentación del desarrollo realizado](#46-documentación-del-desarrollo-realizado)
   - [4.7 Cumplimiento de requisitos (versión final)](#47-cumplimiento-de-requisitos)
-  - [4.8 Anexo](#48-anexo)
+  - [4.8 Resultados de compilación y uso de memoria](#48-resultados-de-compilación-y-uso-de-memoria)
+  - [4.9 Manual rápido de usuario](#49-manual-rápido-de-usuario)
+  - [4.10 Uso de herramientas de IA](#410-uso-de-herramientas-de-ia)
 - [5 Conclusiones](#conclusiones)
   - [5.1 Resultados obtenidos](#51-resultados-obtenidos)
   - [5.2 Próximos pasos](#52-próximos-pasos)
@@ -527,15 +529,19 @@ Como resultado del proceso de ingeniería, se generó un conjunto de documentos 
 - **2.1 DIP switches:** se descartó para priorizar estabilidad de decodificación y cierre de integración; la selección de modos se resolvió desde CLI.
 - **Modo FALLA:** el proyecto contempla el concepto, pero no se implementó un manejo completo de falla segura (se dejó como mejora futura).
 
-# 4.8 Anexo
+## 4.8 Resultados de compilación y uso de memoria
+
+En esta sección se presentan dos capturas generadas durante la etapa de compilación del firmware en STM32CubeIDE.
+La **Figura 4.5** corresponde al resumen del proceso de build y permite verificar que el proyecto compila correctamente con la configuración final utilizada para la entrega.
+La **Figura 4.6** muestra el **uso de memoria** del microcontrolador, indicando el tamaño ocupado en **Flash** (código y constantes) y en **RAM** (variables globales), información relevante para confirmar que el firmware se mantiene dentro de los recursos disponibles del STM32F103RB.
 
 <img src="docs/img/Figura6_1.png" width="650" />
-<em>Figura 6.1 — Resultado de análisis de compilación del programa.</em><br><br>
+<em>Figura 4.5 — Resultado del análisis de compilación del firmware.</em><br><br>
 
 <img src="docs/img/Figura6_2.png" width="690" />
-<em>Figura 6.2 — Regiones de memorias utilizadas por el programa.</em><br><br>
+<em>Figura 4.6 — Uso de memoria del firmware (Flash y RAM).</em><br><br>
 
-# Manual rápido de usuario
+## 4.9 Manual rápido de usuario
 
 ## 1) Encendido
 - Conectar la NUCLEO por USB.
@@ -561,7 +567,16 @@ Como resultado del proceso de ingeniería, se generó un conjunto de documentos 
 ## 4) Interpretación del OLED
 - Muestra modo actual, umbrales, barra del LDR, símbolo en construcción y última frase decodificada.
 
-# 5 Conclusiones
+## 4.10 Uso de herramientas IA
+
+Para la elaboración del presente documento se utilizaron **de manera limitada** herramientas de asistencia basadas en IA exclusivamente como apoyo para:
+- mejorar la **estructura** y presentación del texto,
+- realizar **correcciones de ortografía y redacción**,
+- proponer reformulaciones menores para lograr mayor claridad.
+
+La **definición técnica del sistema**, el **diseño e implementación del hardware y firmware**, así como los **resultados de pruebas, mediciones y conclusiones**, corresponden al trabajo realizado por el grupo y fueron redactados y verificados por sus integrantes.
+
+# Conclusiones
 
 El desarrollo del prototipo **Luz-Morse** cumplió satisfactoriamente con los objetivos planteados, logrando la implementación de un sistema embebido funcional, eficiente y de bajo costo, capaz de decodificar señales ópticas en tiempo real. Los principales logros del proyecto se resumen a continuación:
 
